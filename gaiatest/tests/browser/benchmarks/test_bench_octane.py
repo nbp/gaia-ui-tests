@@ -41,8 +41,7 @@ class TestBenchOctane(GaiaTestCase):
         time.sleep(5 * 60)
         self.verify_finished()
 
-        result = self.collect_results()
-        print json.dumps(result, indent=2, separators=(',', ': '))
+        self.print_results()
 
     def verify_home_page(self):
         self.wait_for_element_present(*self._run_octane_locator)
@@ -55,17 +54,30 @@ class TestBenchOctane(GaiaTestCase):
         self.assertTrue(result.is_displayed, '(1) still running?')
         self.assertTrue(result.text.isdigit(), '(2) still running?')
 
-    def collect_results(self):
-        return self.marionette.execute_script("""
+    def print_results(self):
+        result = self.marionette.execute_script("""
           var res = document.getElementsByClassName('p-result');
-          var obj = {};
-          var name, score;
+          var obj = [];
+          var name, score, hasBad;
           for (var i = 0; i < res.length; i++) {
             name = res[i].id.slice(7); // Result-*
             score = res[i].textContent | 0; // ... Or 123
-            obj[name] = score;
+            if (score == 0)
+              hasBad = true;
+            else
+              obj.push({"name": name, "score": score});
           }
-          obj.total = document.getElementById('main-banner')
-                        .textContent.split(': ')[1] | 0;
+          if (!hasBad) {
+            obj.push({
+              "name": "Score",
+              "score": document.getElementById('main-banner')
+                          .textContent.split(': ')[1] | 0
+            });
+          }
           return obj;
         """)
+
+        print "\n\nShell-like octane results:"
+        for i in result:
+            print "%s: %d" % (i['name'], i['score'])
+        print "End of shell-like results."
