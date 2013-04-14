@@ -2,7 +2,6 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-import json
 import time
 from gaiatest import GaiaTestCase
 from gaiatest.apps.browser.app import Browser
@@ -22,7 +21,7 @@ class TestBenchOctane(GaiaTestCase):
             self.data_layer.connect_to_wifi(self.testvars['wifi'])
 
     def test_octane(self):
-        # https://github.com/mozilla/gaia-ui-tests/issues/450
+        # Bug 860516
         browser = Browser(self.marionette)
         browser.launch()
 
@@ -44,15 +43,12 @@ class TestBenchOctane(GaiaTestCase):
         self.print_results()
 
     def verify_home_page(self):
-        self.wait_for_element_present(*self._run_octane_locator)
-        link = self.marionette.find_element(*self._run_octane_locator)
-        self.assertTrue(link.is_displayed, 'The octane page is not rendered.')
+        self.wait_for_element_displayed(*self._run_octane_locator)
 
     def verify_finished(self):
-        self.wait_for_element_present(*self._last_benchmark_locator)
+        self.wait_for_element_displayed(*self._last_benchmark_locator)
         result = self.marionette.find_element(*self._last_benchmark_locator)
-        self.assertTrue(result.is_displayed, '(1) still running?')
-        self.assertTrue(result.text.isdigit(), '(2) still running?')
+        self.assertTrue(result.text.isdigit(), 'Benchmark is still running?')
 
     def print_results(self):
         result = self.marionette.execute_script("""
