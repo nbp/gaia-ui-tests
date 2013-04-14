@@ -23,7 +23,7 @@ class TestBenchSunspider(GaiaTestCase):
             self.data_layer.connect_to_wifi(self.testvars['wifi'])
 
     def test_sunspider(self):
-        # https://github.com/mozilla/gaia-ui-tests/issues/450
+        # Bug 860516
         browser = Browser(self.marionette)
         browser.launch()
 
@@ -56,9 +56,7 @@ class TestBenchSunspider(GaiaTestCase):
         self.assertTrue(link.text == 'Start Now!', 'The sunspider page is not rendered.')
 
     def verify_finished(self):
-        self.wait_for_element_present(*self._console_locator)
-        result = self.marionette.find_element(*self._console_locator)
-        self.assertTrue(result.is_displayed, 'Is that the result page ?!')
+        self.wait_for_element_displayed(*self._console_locator)
 
     def print_results(self):
         result = self.marionette.execute_script("""
