@@ -53,12 +53,14 @@ class TestBenchKraken(GaiaTestCase):
     def verify_home_page(self):
         self.wait_for_element_present(*self._run_locator)
         link = self.marionette.find_element(*self._run_locator)
-        self.assertTrue(link.text == 'Begin', 'The kraken page is not rendered.')
+        self.assertTrue(link.text == 'Begin',
+                        'The kraken start page is not loaded.')
 
     def verify_finished(self):
         self.wait_for_element_present(*self._run_locator)
         link = self.marionette.find_element(*self._run_locator)
-        self.assertTrue(link.text == 'Run Again', 'The kraken page is not rendered.')
+        self.assertTrue(link.text == 'Run Again',
+                        'The kraken final page is not loaded.')
 
     def print_results(self):
         # Return a list of lines, as the full string is too large for

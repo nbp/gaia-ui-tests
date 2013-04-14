@@ -53,7 +53,8 @@ class TestBenchSunspider(GaiaTestCase):
     def verify_home_page(self):
         self.wait_for_element_present(*self._start_now_locator)
         link = self.marionette.find_element(*self._start_now_locator)
-        self.assertTrue(link.text == 'Start Now!', 'The sunspider page is not rendered.')
+        self.assertTrue(link.text == 'Start Now!',
+                        'The sunspider page is not rendered.')
 
     def verify_finished(self):
         self.wait_for_element_displayed(*self._console_locator)
