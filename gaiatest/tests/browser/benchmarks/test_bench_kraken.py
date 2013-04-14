@@ -23,7 +23,7 @@ class TestBenchKraken(GaiaTestCase):
             self.data_layer.connect_to_wifi(self.testvars['wifi'])
 
     def test_kraken(self):
-        # https://github.com/mozilla/gaia-ui-tests/issues/450
+        # Bug 860516
         browser = Browser(self.marionette)
         browser.launch()
 
