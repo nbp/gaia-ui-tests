@@ -59,6 +59,8 @@ class TestBenchSunspider(GaiaTestCase):
         self.wait_for_element_displayed(*self._console_locator)
 
     def print_results(self):
+        # Return a list of lines, as the full string is too large for
+        # marionette.
         result = self.marionette.execute_script("""
           return document.getElementById('console').innerHTML.split('<br>');
         """)
