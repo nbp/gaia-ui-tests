@@ -42,11 +42,9 @@ class TestBrowserNavigation(GaiaTestCase):
         self.verify_community_page()
 
     def verify_home_page(self):
-        self.wait_for_element_present(*self._community_link_locator)
-        community_link = self.marionette.find_element(*self._community_link_locator)
-        self.assertTrue(community_link.is_displayed, 'The community link was not visible at mozilla.html.')
+        # The community link was not visible at mozilla.html.
+        self.wait_for_element_displayed(*self._community_link_locator)
 
     def verify_community_page(self):
-        self.wait_for_element_present(*self._community_history_section_locator)
-        history_section = self.marionette.find_element(*self._community_history_section_locator)
-        self.assertTrue(history_section.is_displayed, 'The history section was not visible at mozilla_community.html.')
+        # The history section was not visible at mozilla_community.html.
+        self.wait_for_element_displayed(*self._community_history_section_locator)
