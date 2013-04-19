@@ -2,8 +2,9 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-import json
 import time
+from marionette.marionette import Actions
+from marionette.errors import ElementNotVisibleException
 from gaiatest import GaiaTestCase
 from gaiatest.apps.browser.app import Browser
 
@@ -32,11 +33,19 @@ class TestBenchSunspider(GaiaTestCase):
         self.verify_home_page()
         start_now_link = self.marionette.find_element(*self._start_now_locator)
 
+        try:
+            Actions(self.marionette).\
+                press(start_now_link).\
+                move_by_offset(x=0, y=0).\
+                release().\
+                perform()
+        except ElementNotVisibleException:
+            None
+
         # wait 30s, to let the system settle.
-        time.sleep(15)
+        time.sleep(30)
 
         # scroll to the link location & start the benchmark
-        start_now_link.single_tap()
         self.marionette.tap(start_now_link)
 
         # Switch to the chrome, because the page will be automatically
