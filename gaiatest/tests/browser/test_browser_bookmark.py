@@ -10,17 +10,17 @@ class TestBrowserBookmark(GaiaTestCase):
 
     _homescreen_frame_locator = ('css selector', 'div.homescreen > iframe')
     _homescreen_icon_locator = ('css selector', 'li.icon[aria-label="%s"]')
+    _bookmark_added = False
 
     def setUp(self):
         GaiaTestCase.setUp(self)
-
-        if self.wifi:
-            self.data_layer.enable_wifi()
-            self.data_layer.connect_to_wifi(self.testvars['wifi'])
+        self.connect_to_network()
 
         import time
         curr_time = repr(time.time()).replace('.', '')
         self.bookmark_title = 'gaia%s' % curr_time[10:]
+        self._homescreen_icon_locator = (self._homescreen_icon_locator[0],
+                                         self._homescreen_icon_locator[1] % self.bookmark_title)
 
     def test_browser_bookmark(self):
         # https://github.com/mozilla/gaia-ui-tests/issues/452
@@ -31,7 +31,6 @@ class TestBrowserBookmark(GaiaTestCase):
 
         browser.tap_bookmark_button()
         browser.tap_add_bookmark_to_home_screen_choice_button()
-        browser.switch_to_bookmark_edit_dialog()
         browser.type_bookmark_title(self.bookmark_title)
         browser.tap_add_bookmark_to_home_screen_dialog_button()
 
@@ -40,20 +39,22 @@ class TestBrowserBookmark(GaiaTestCase):
         self.marionette.execute_script("window.wrappedJSObject.dispatchEvent(new Event('home'));")
         self.marionette.switch_to_frame(self.marionette.find_element(*self._homescreen_frame_locator))
 
+        # Wait for Gaia to insert the element into the page
+        self.wait_for_element_present(*self._homescreen_icon_locator)
+
         # check whether bookmark was added
-        bookmark_added = False
         while self._homescreen_has_more_pages:
-            if self.is_element_displayed(self._homescreen_icon_locator[0], self._homescreen_icon_locator[1] % self.bookmark_title):
-                bookmark_added = True
+            if self.is_element_displayed(*self._homescreen_icon_locator):
+                self._bookmark_added = True
                 break
             self._go_to_next_page()
 
-        self.assertTrue(bookmark_added, 'The bookmark %s was not found to be installed on the home screen.' % self.bookmark_title)
+        self.assertTrue(self._bookmark_added, 'The bookmark %s was not found to be installed on the home screen.' % self.bookmark_title)
 
     def tearDown(self):
-        self.delete_bookmark(self.bookmark_title)
-        if self.wifi:
-            self.data_layer.disable_wifi()
+        if self._bookmark_added:
+            self._delete_bookmark(self.bookmark_title)
+
         GaiaTestCase.tearDown(self)
 
     def _go_to_next_page(self):
@@ -66,7 +67,11 @@ class TestBrowserBookmark(GaiaTestCase):
         var pageHelper = window.wrappedJSObject.GridManager.pageHelper;
         return pageHelper.getCurrentPageNumber() < (pageHelper.getTotalPagesNumber() - 1);""")
 
-    def delete_bookmark(self, bookmark_name):
+    def _delete_bookmark(self, bookmark_name):
+        # TODO move this snippet to the Homescreen app object
+
+        # ensure we are in the homescreen app
+        self.apps.launch('Homescreen')
         self.marionette.execute_script("""
                                           name = arguments[0];
                                           let apps = window.wrappedJSObject.GridManager.getApps();
@@ -74,7 +79,7 @@ class TestBrowserBookmark(GaiaTestCase):
                                             if (aApp.isBookmark) {
                                               if (aApp.manifest.name == name) {
                                                 console.log('uninstalling app with name ' + aApp.manifest.name);
-                                                aApp.uninstall();
+                                                window.wrappedJSObject.GridManager.uninstall(aApp);
                                               };
                                             };
                                           });

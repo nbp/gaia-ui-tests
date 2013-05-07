@@ -74,6 +74,7 @@ class NewAlarm(Clock):
         return self.marionette.find_element(*self._current_element(*self._hour_picker_locator)).text
 
     def spin_hour(self):
+        self.wait_for_element_displayed(*self._hour_picker_locator)
         if int(self.hour) > 6:
                 self._flick_menu_down(self._hour_picker_locator)
         else:
@@ -97,16 +98,15 @@ class NewAlarm(Clock):
         return self.marionette.find_element(*self._current_element(*self._hour24_picker_locator)).text
 
     def spin_hour24(self):
+        hour24_picker = self.marionette.find_element(*self._current_element(*self._hour24_picker_locator))
+        hour24_picker_move_y = hour24_picker.size['height'] * 2
+        hour24_picker_mid_x = hour24_picker.size['width'] / 2
+        hour24_picker_mid_y = hour24_picker.size['height'] / 2
+
         if self.hour24 == 'AM':
-            self.marionette.flick(self.marionette.find_element(*self._current_element(*self._hour24_picker_locator)),
-                                  '50%', '50%',
-                                  0, -300,
-                                  800)
+            self.marionette.flick(hour24_picker, hour24_picker_mid_x, hour24_picker_mid_y, hour24_picker_mid_x, hour24_picker_mid_y - hour24_picker_move_y)
         else:
-            self.marionette.flick(self.marionette.find_element(*self._current_element(*self._hour24_picker_locator)),
-                                  '50%', '50%',
-                                  0, 300,
-                                  800)
+            self.marionette.flick(hour24_picker, hour24_picker_mid_x, hour24_picker_mid_y, hour24_picker_mid_x, hour24_picker_mid_y + hour24_picker_move_y)
 
         time.sleep(1)
 

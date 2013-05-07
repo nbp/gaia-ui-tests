@@ -2,6 +2,7 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+from marionette.marionette import Actions
 from gaiatest import GaiaTestCase
 
 
@@ -23,12 +24,7 @@ class TestDeleteApp(GaiaTestCase):
 
     def setUp(self):
         GaiaTestCase.setUp(self)
-
-        # Activate wifi
-        if self.wifi:
-            self.data_layer.enable_wifi()
-            self.data_layer.connect_to_wifi(self.testvars['wifi'])
-
+        self.connect_to_network()
         self.homescreen = self.apps.launch('Homescreen')
 
     def test_delete_app(self):
@@ -61,9 +57,12 @@ class TestDeleteApp(GaiaTestCase):
         app_icon = self.marionette.find_element(*self._icon_locator)
         self.assertTrue(app_icon.is_displayed())
 
-        # go to edit mode.
-        # TODO: activate edit mode using HOME button https://bugzilla.mozilla.org/show_bug.cgi?id=814425
-        self._activate_edit_mode()
+        # go to edit mode
+        Actions(self.marionette). \
+            press(app_icon). \
+            wait(3). \
+            release(). \
+            perform()
 
         # delete the app
         delete_button = app_icon.find_element(*self._delete_app_locator)
@@ -89,9 +88,6 @@ class TestDeleteApp(GaiaTestCase):
 
     def _go_to_next_page(self):
         self.marionette.execute_script('window.wrappedJSObject.GridManager.goToNextPage()')
-
-    def _activate_edit_mode(self):
-        self.marionette.execute_script("window.wrappedJSObject.Homescreen.setMode('edit')")
 
     def tearDown(self):
         if self.APP_INSTALLED:

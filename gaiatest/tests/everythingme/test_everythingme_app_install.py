@@ -2,10 +2,15 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+from marionette.marionette import Actions
+
 from gaiatest import GaiaTestCase
 
 
+
 class TestEverythingMeInstallApp(GaiaTestCase):
+
+    app_installed = False
 
     # Everything.Me locators
     _shortcut_items_locator = ('css selector', '#shortcuts-items li')
@@ -20,15 +25,12 @@ class TestEverythingMeInstallApp(GaiaTestCase):
     _modal_dialog_ok_locator = ('id', 'modal-dialog-confirm-ok')
 
     def setUp(self):
-
         GaiaTestCase.setUp(self)
 
         # Turn off geolocation prompt
         self.apps.set_permission('Homescreen', 'geolocation', 'deny')
 
-        if self.wifi:
-            self.data_layer.enable_wifi()
-            self.data_layer.connect_to_wifi(self.testvars['wifi'])
+        self.connect_to_network()
 
     def test_installing_everything_me_app(self):
         # https://github.com/mozilla/gaia-ui-tests/issues/67
@@ -53,7 +55,7 @@ class TestEverythingMeInstallApp(GaiaTestCase):
 
         first_app_icon = self.marionette.find_element(*self._apps_icon_locator)
         self.first_app_name = first_app_icon.text
-        self.marionette.long_press(first_app_icon)
+        Actions(self.marionette).long_press(first_app_icon, 2).perform()
 
         self.marionette.switch_to_frame()
 
@@ -75,7 +77,6 @@ class TestEverythingMeInstallApp(GaiaTestCase):
         self.marionette.switch_to_frame(hs_frame)
 
         # check whether app is installed
-        self.app_installed = False
         while self._homescreen_has_more_pages:
             if self.is_element_displayed(self._homescreen_icon_locator[0], self._homescreen_icon_locator[1] % self.first_app_name):
                 self.app_installed = True
@@ -101,6 +102,8 @@ class TestEverythingMeInstallApp(GaiaTestCase):
         return pageHelper.getCurrentPageNumber() < (pageHelper.getTotalPagesNumber() - 1);""")
 
     def delete_bookmark(self, bookmark_name):
+        # TODO move this snippet to the Homescreen app object
+        
         self.marionette.execute_script("""
                                           name = arguments[0];
                                           let apps = window.wrappedJSObject.GridManager.getApps();

@@ -10,14 +10,9 @@ from gaiatest.apps.contacts.app import Contacts
 
 class TestContacts(GaiaTestCase):
 
-    def setUp(self):
-        GaiaTestCase.setUp(self)
-
-        self.contact = MockContact()
-
     def test_add_new_contact(self):
         # https://moztrap.mozilla.org/manage/case/1309/
-        #click Create new contact
+        self.contact = MockContact()
 
         contacts_app = Contacts(self.marionette)
         contacts_app.launch()
