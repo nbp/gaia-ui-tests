@@ -17,18 +17,22 @@ class TestBenchKraken(GaiaTestCase):
 
     def setUp(self):
         GaiaTestCase.setUp(self)
-
-        if self.wifi:
-            self.data_layer.enable_wifi()
-            self.data_layer.connect_to_wifi(self.testvars['wifi'])
+        self.connect_to_local_area_network()
 
     def test_kraken(self):
         # Bug 860516
         browser = Browser(self.marionette)
         browser.launch()
 
+        print "Visit url %s" % self._start_page
         browser.go_to_url(self._start_page)
+        time.sleep(2)
+
+        print "Switch to the content of the page."
         browser.switch_to_content()
+        time.sleep(2)
+
+        print "Verify that the page is correctly loaded."
         self.verify_home_page()
 
         run_link = self.marionette.find_element(*self._run_locator)
@@ -44,6 +48,7 @@ class TestBenchKraken(GaiaTestCase):
         browser.switch_to_chrome()
 
         # wait 8 minutes, to let the becnhmark complete.
+        print "Start benchmarking ..."
         time.sleep(8 * 60)
         browser.switch_to_content()
         self.verify_finished()

@@ -9,34 +9,42 @@ from gaiatest.apps.browser.app import Browser
 
 class TestBenchOctane(GaiaTestCase):
 
+    _start_page = 'http://people.mozilla.com/~npierron/octane/index.html'
     _run_octane_locator = ('id', 'run-octane')
     _last_benchmark_locator = ('css selector', '#Box-Box2D .p-result')
     _total_score_locator = ('id', 'main-banner')
 
     def setUp(self):
         GaiaTestCase.setUp(self)
-
-        if self.wifi:
-            self.data_layer.enable_wifi()
-            self.data_layer.connect_to_wifi(self.testvars['wifi'])
+        self.connect_to_local_area_network()
+        print ""
 
     def test_octane(self):
         # Bug 860516
         browser = Browser(self.marionette)
         browser.launch()
 
-        browser.go_to_url('http://people.mozilla.com/~npierron/octane/index.html')
+        print "Visit url %s" % self._start_page
+        browser.go_to_url(self._start_page)
+        time.sleep(2)
 
+        print "Switch to the content of the page."
         browser.switch_to_content()
+        time.sleep(2)
+
+        print "Verify that the page is correctly loaded."
         self.verify_home_page()
+
+        run_button = self.marionette.find_element(*self._run_octane_locator)
 
         # wait 30s, to let the system settle.
         time.sleep(30)
 
         # run the benchmark
-        self.marionette.tap(self.marionette.find_element(*self._run_octane_locator))
+        run_button.tap()
 
         # wait 5 minutes, to let the becnhmark complete.
+        print "Start benchmarking ..."
         time.sleep(5 * 60)
         self.verify_finished()
 
