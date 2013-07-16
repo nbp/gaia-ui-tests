@@ -18,42 +18,46 @@ class TestBenchSunspider(GaiaTestCase):
 
     def setUp(self):
         GaiaTestCase.setUp(self)
-
-        if self.wifi:
-            self.data_layer.enable_wifi()
-            self.data_layer.connect_to_wifi(self.testvars['wifi'])
+        self.connect_to_local_area_network()
+        print ""
 
     def test_sunspider(self):
         # Bug 860516
         browser = Browser(self.marionette)
         browser.launch()
 
+        print "Visit url %s" % self._start_page
         browser.go_to_url(self._start_page)
-        browser.switch_to_content()
-        self.verify_home_page()
-        start_now_link = self.marionette.find_element(*self._start_now_locator)
+        time.sleep(2)
 
-        try:
-            Actions(self.marionette).\
-                press(start_now_link).\
-                move_by_offset(x=0, y=0).\
-                release().\
-                perform()
-        except ElementNotVisibleException:
-            None
+        print "Switch to the content of the page."
+        browser.switch_to_content()
+        time.sleep(2)
+
+        print "Verify that the page is correctly loaded."
+        self.verify_home_page()
+
+        # remove some text to make the button visible in the screen,
+        # that's a shame that marionette does not have any good way to
+        # scroll to an element.
+        self.marionette.execute_script("""
+          document.getElementsByTagName('dl')[0].innerHTML = '';
+        """)
+        start_now_link = self.marionette.find_element(*self._start_now_locator)
 
         # wait 30s, to let the system settle.
         time.sleep(30)
 
         # scroll to the link location & start the benchmark
-        self.marionette.tap(start_now_link)
+        start_now_link.tap()
+        print "Start benchmarking ..."
 
         # Switch to the chrome, because the page will be automatically
         # redirected as soon as the benchmark is complete
         browser.switch_to_chrome()
 
-        # wait 4 minutes, to let the becnhmark complete.
-        time.sleep(4 * 60)
+        # wait 6 minutes, to let the becnhmark complete.
+        time.sleep(5 * 60)
         browser.switch_to_content()
         self.verify_finished()
 
