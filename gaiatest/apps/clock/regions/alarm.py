@@ -7,24 +7,23 @@ import time
 from marionette.marionette import Actions
 
 from gaiatest.apps.clock.app import Clock
+from marionette.marionette import Actions
 
 
 class NewAlarm(Clock):
 
-    _picker_container_locator = ('id', 'picker-container')
-    _alarm_name_locator = ('xpath', "//input[@placeholder='Alarm']")
+    _edit_alarm_fields_locator = ('id', 'edit-alarm')
+    _alarm_name_locator = ('xpath', "//input[@placeholder='Alarm name']")
     _repeat_menu_locator = ('id', 'repeat-menu')
     _sound_menu_locator = ('id', 'sound-menu')
     _snooze_menu_locator = ('id', 'snooze-menu')
     _done_locator = ('id', 'alarm-done')
+    _close_locator = ('id', 'alarm-close')
+    _time_button_locator = ('id', 'time-menu')
 
     _hour_picker_locator = ('css selector', '#value-picker-hours div')
     _minutes_picker_locator = ('css selector', '#value-picker-minutes div')
     _hour24_picker_locator = ('css selector', '#value-picker-hour24-state div')
-
-    @property
-    def alarm_label(self):
-        return self.marionette.find_element(*self._alarm_name_locator).text
 
     def type_alarm_label(self, value):
         label = self.marionette.find_element(*self._alarm_name_locator)
@@ -40,7 +39,7 @@ class NewAlarm(Clock):
         return self.marionette.find_element(*self._repeat_menu_locator).text
 
     def select_repeat(self, value):
-        self.marionette.tap(self.marionette.find_element(*self._repeat_menu_locator))
+        self.marionette.find_element(*self._repeat_menu_locator).tap()
         self.select(value)
 
     @property
@@ -48,7 +47,7 @@ class NewAlarm(Clock):
         return self.marionette.find_element(*self._snooze_menu_locator).text
 
     def select_snooze(self, value):
-        self.marionette.tap(self.marionette.find_element(*self._snooze_menu_locator))
+        self.marionette.find_element(*self._snooze_menu_locator).tap()
         self.select(value)
 
     @property
@@ -56,14 +55,16 @@ class NewAlarm(Clock):
         return self.marionette.find_element(*self._sound_menu_locator).text
 
     def select_sound(self, value):
-        self.marionette.tap(self.marionette.find_element(*self._sound_menu_locator))
+        self.marionette.find_element(*self._sound_menu_locator).tap()
         self.select(value)
 
-    def wait_for_picker_to_be_visible(self):
-        self.wait_for_element_displayed(*self._picker_container_locator)
+    def wait_for_panel_to_load(self):
+        self.wait_for_condition(lambda m: m.find_element(*self._close_locator).location['x'] == 0)
+        self.wait_for_element_displayed(*self._edit_alarm_fields_locator)
 
     def tap_done(self):
-        self.marionette.tap(self.marionette.find_element(*self._done_locator))
+        self.wait_for_element_displayed(*self._done_locator)
+        self.marionette.find_element(*self._done_locator).tap()
 
         clock = Clock(self.marionette)
         clock.wait_for_banner_displayed()
@@ -104,13 +105,17 @@ class NewAlarm(Clock):
         hour24_picker_mid_y = hour24_picker.size['height'] / 2
 
         if self.hour24 == 'AM':
-            self.marionette.flick(hour24_picker, hour24_picker_mid_x, hour24_picker_mid_y, hour24_picker_mid_x, hour24_picker_mid_y - hour24_picker_move_y)
+            Actions(self.marionette).flick(hour24_picker, hour24_picker_mid_x, hour24_picker_mid_y, hour24_picker_mid_x, hour24_picker_mid_y - hour24_picker_move_y)
         else:
-            self.marionette.flick(hour24_picker, hour24_picker_mid_x, hour24_picker_mid_y, hour24_picker_mid_x, hour24_picker_mid_y + hour24_picker_move_y)
+            Actions(self.marionette).flick(hour24_picker, hour24_picker_mid_x, hour24_picker_mid_y, hour24_picker_mid_x, hour24_picker_mid_y + hour24_picker_move_y)
 
         time.sleep(1)
 
+    def tap_time(self):
+        self.marionette.find_element(*self._time_button_locator).tap()
+
     def _flick_menu_up(self, locator):
+        self.wait_for_element_displayed(*self._current_element(*locator))
         current_element = self.marionette.find_element(*self._current_element(*locator))
         next_element = self.marionette.find_element(*self._next_element(*locator))
 
@@ -122,6 +127,7 @@ class NewAlarm(Clock):
         action.perform()
 
     def _flick_menu_down(self, locator):
+        self.wait_for_element_displayed(*self._current_element(*locator))
         current_element = self.marionette.find_element(*self._current_element(*locator))
         next_element = self.marionette.find_element(*self._next_element(*locator))
 
@@ -148,5 +154,5 @@ class EditAlarm(NewAlarm):
         self.wait_for_element_displayed(*self._alarm_delete_button_locator)
 
     def tap_delete(self):
-        self.marionette.tap(self.marionette.find_element(*self._alarm_delete_button_locator))
+        self.marionette.find_element(*self._alarm_delete_button_locator).tap()
         return Clock(self.marionette)

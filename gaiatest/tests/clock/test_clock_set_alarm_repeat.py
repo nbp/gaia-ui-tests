@@ -33,7 +33,7 @@ class TestClockSetAlarmRepeat(GaiaTestCase):
 
         # check select Sunday twice
         new_alarm.select_repeat('Sunday')
-        self.assertEqual('Mon, Tue, Wed, Thu, Fri Sun', new_alarm.alarm_repeat)
+        self.assertEqual('Mon, Tue, Wed, Thu, Fri, Sun', new_alarm.alarm_repeat)
 
         new_alarm.select_repeat('Sunday')
         self.assertEqual('Weekdays', new_alarm.alarm_repeat)
@@ -51,9 +51,3 @@ class TestClockSetAlarmRepeat(GaiaTestCase):
         # Close alarm
         edit_alarm.tap_done()
         self.clock.wait_for_banner_not_visible()
-
-    def tearDown(self):
-        # delete any existing alarms
-        self.data_layer.delete_all_alarms()
-
-        GaiaTestCase.tearDown(self)

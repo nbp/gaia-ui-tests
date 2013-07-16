@@ -3,13 +3,14 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 from gaiatest import GaiaTestCase
+from marionette.marionette import Actions
 
 
 class TestLockScreen(GaiaTestCase):
 
     # Lockscreen area locators
     _lockscreen_locator = ('id', 'lockscreen')
-    _lockscreen_area_locator = ('id', 'lockscreen-area')
+    _lockscreen_icon_area_locator = ('id', 'lockscreen-icon-container')
     _lockscreen_handle_locator = ('id', 'lockscreen-area-handle')
     _camera_button_locator = ('id', 'lockscreen-area-camera')
 
@@ -20,18 +21,23 @@ class TestLockScreen(GaiaTestCase):
     def setUp(self):
         GaiaTestCase.setUp(self)
 
+        # Turn off geolocation prompt
+        self.apps.set_permission('Camera', 'geolocation', 'deny')
+
         # this time we need it locked!
         self.lockscreen.lock()
+        self.wait_for_element_displayed(*self._lockscreen_handle_locator)
 
     def test_unlock_swipe_to_camera(self):
         # https://moztrap.mozilla.org/manage/case/2460/
+
         self._swipe_and_unlock()
 
         camera_button = self.marionette.find_element(*self._camera_button_locator)
-        camera_button.click()
+        camera_button.tap()
 
         lockscreen_element = self.marionette.find_element(*self._lockscreen_locator)
-        self.wait_for_condition(lambda m: not lockscreen_element.is_displayed())
+        self.wait_for_condition(lambda m: not self.marionette.find_element(*self._lockscreen_locator).is_displayed())
 
         self.assertFalse(lockscreen_element.is_displayed(), "Lockscreen still visible after unlock")
 
@@ -50,11 +56,11 @@ class TestLockScreen(GaiaTestCase):
         unlock_handle_y_centre = int(unlock_handle.size['height'] / 2)
 
         # Get the end position from the demo animation
-        lockscreen_area = self.marionette.find_element(*self._lockscreen_area_locator)
-        end_animation_position = lockscreen_area.size['height'] - unlock_handle.size['height']
+        lockscreen_icon_area = self.marionette.find_element(*self._lockscreen_icon_area_locator)
+        end_animation_position = lockscreen_icon_area.size['height'] - unlock_handle.size['height']
 
         # Flick from unlock handle to (0, -end_animation_position) over 800ms duration
-        self.marionette.flick(unlock_handle, unlock_handle_x_centre, unlock_handle_y_centre, 0, 0 - end_animation_position, 800)
+        Actions(self.marionette).flick(unlock_handle, unlock_handle_x_centre, unlock_handle_y_centre, 0, 0 - end_animation_position).perform()
 
         # Wait for the svg to animate and handle to disappear
         # TODO add assertion that unlock buttons are visible after bug 813561 is fixed

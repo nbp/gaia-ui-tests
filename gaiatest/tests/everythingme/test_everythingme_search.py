@@ -11,7 +11,7 @@ class TestEverythingMeSearch(GaiaTestCase):
     # Everything.Me locators
     _shortcut_items_locator = ('css selector', '#shortcuts-items li')
     _search_box_locator = ('id', 'search-q')
-    _search_tip_locator = ('css selector', '#helper ul li[data-index]')
+    _search_tips_locator = ('css selector', '#helper ul:not(.anim) li[data-index]')
 
     # Homescreen locators
     _homescreen_frame_locator = ('css selector', 'div.homescreen > iframe')
@@ -32,6 +32,8 @@ class TestEverythingMeSearch(GaiaTestCase):
 
         # We'll use js to flick pages for reliability/Touch is unreliable
         self.marionette.execute_script("window.wrappedJSObject.GridManager.goToPreviousPage();")
+        self.wait_for_condition(lambda m: m.find_element('tag name', 'body')
+            .get_attribute('data-transitioning') != 'true')
 
         # Find the search box and clear it
         self.wait_for_element_displayed(*self._search_box_locator)
@@ -43,10 +45,9 @@ class TestEverythingMeSearch(GaiaTestCase):
         search_input.click()
 
         # Wait for the search suggestions and then tap on the first one
-        self.wait_for_element_present(*self._search_tip_locator)
-        search_tips = self.marionette.find_elements(*self._search_tip_locator)
-        self.assertGreater(len(search_tips), 0, 'No search suggestions found')
-        self.marionette.tap(search_tips[0])
+        self.wait_for_condition(lambda m: len(m.find_elements(*self._search_tips_locator)) > 0)
+        self.wait_for_element_displayed(*self._search_tips_locator)
+        self.marionette.find_element(*self._search_tips_locator).tap()
 
         # Wait for the apps to appear
         self.wait_for_element_present(*self._shortcut_items_locator)

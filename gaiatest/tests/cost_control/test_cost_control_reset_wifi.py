@@ -18,6 +18,8 @@ class TestCostControlReset(GaiaTestCase):
         self.data_layer.connect_to_wifi()
         cost_control = CostControl(self.marionette)
         cost_control.launch()
+
+        cost_control.switch_to_ftu()
         cost_control.run_ftu_accepting_defaults()
 
         cost_control.toggle_mobile_data_tracking(False)

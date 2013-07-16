@@ -21,6 +21,8 @@ class TestCostControlDataAlertMobile(GaiaTestCase):
         self.data_layer.connect_to_cell_data()
         cost_control = CostControl(self.marionette)
         cost_control.launch()
+
+        cost_control.switch_to_ftu()
         cost_control.run_ftu_accepting_defaults()
 
         self.assertTrue(cost_control.is_mobile_data_tracking_on)
@@ -28,13 +30,12 @@ class TestCostControlDataAlertMobile(GaiaTestCase):
 
         settings = cost_control.tap_settings()
         settings.toggle_data_alert_switch(True)
-        settings.select_when_use_is_above_unit_and_value('MB', '0.1')
+        settings.select_when_use_is_above_unit_and_value(u'MB', '0.1')
         settings.reset_data_usage()
         settings.tap_done()
         self.assertTrue(cost_control.is_mobile_data_tracking_on)
 
         # open browser to get some data downloaded
-        # please remove this once there is a better way than launching browser app/obj to do so
         browser = Browser(self.marionette)
         browser.launch()
         browser.go_to_url('http://developer.mozilla.org/')
@@ -51,6 +52,7 @@ class TestCostControlDataAlertMobile(GaiaTestCase):
         self.marionette.switch_to_frame(usage_iframe)
 
         # make sure the color changed
-        bar = self.marionette.find_element(*self._data_usage_view_locator)
-        self.wait_for_condition(lambda m: 'reached-limit' in bar.get_attribute('class'),
-                                message='Data usage bar did not breach limit')
+        self.wait_for_condition(
+            lambda m: 'reached-limit' in self.marionette.find_element(*self._data_usage_view_locator).get_attribute('class'),
+            message='Data usage bar did not breach limit'
+        )

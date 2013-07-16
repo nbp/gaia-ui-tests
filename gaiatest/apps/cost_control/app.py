@@ -22,6 +22,10 @@ class CostControl(Base):
     _wifi_data_label_locator = ('css selector', '#wifiItem label')
     _wifi_data_usage_figure_locator = ('id', 'wifiOverview')
 
+    # FTE
+    _ftu_frame_locator = ('id', 'fte_view')
+    _ftu_section_locator = ('id', 'firsttime-view')
+
     @property
     def ftu_step1(self):
         from gaiatest.apps.cost_control.regions.ftu_step1 import FTUStep1
@@ -55,17 +59,23 @@ class CostControl(Base):
         ftu_step2 = ftu_step1.tap_next()
         ftu_step3 = ftu_step2.tap_next()
         ftu_step3.tap_lets_go()
+        self.launch()
 
     def tap_settings(self):
         self.wait_for_element_displayed(*self._settings_button_locator)
-        self.marionette.tap(self.marionette.find_element(*self._settings_button_locator))
+        self.marionette.find_element(*self._settings_button_locator).tap()
         from gaiatest.apps.cost_control.regions.settings import Settings
         return Settings(self.marionette)
 
     def toggle_mobile_data_tracking(self, value):
         if self.is_mobile_data_tracking_on is not value:
-            self.marionette.tap(self.marionette.find_element(*self._mobile_data_label_locator))
+            self.marionette.find_element(*self._mobile_data_label_locator).tap()
 
     def toggle_wifi_data_tracking(self, value):
         if self.is_wifi_data_tracking_on is not value:
-            self.marionette.tap(self.marionette.find_element(*self._wifi_data_label_locator))
+            self.marionette.find_element(*self._wifi_data_label_locator).tap()
+
+    def switch_to_ftu(self):
+        ftu_iframe = self.marionette.find_element(*self._ftu_frame_locator)
+        self.marionette.switch_to_frame(ftu_iframe)
+        self.wait_for_element_present(*self._ftu_section_locator)

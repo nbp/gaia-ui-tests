@@ -113,8 +113,7 @@ var GaiaDataLayer = {
 
   getSIMContacts: function(aCallback) {
     var callback = aCallback || marionetteScriptFinished;
-    SpecialPowers.addPermission('contacts-read', true, document);
-    var req = window.navigator.mozContacts.getSimContacts('ADN');
+    var req = navigator.mozIccManager.readContacts("adn");
     req.onsuccess = function () {
       console.log('success finding contacts');
       SpecialPowers.removePermission('contacts-read', document);
@@ -384,40 +383,44 @@ var GaiaDataLayer = {
     });
   },
 
-  getAllMediaFiles: function (aCallback) {
+  getAllPictures: function () {
+    this.getFiles('pictures');
+  },
+
+  getAllVideos: function () {
+    this.getFiles('videos');
+  },
+
+  getAllMusic: function () {
+    this.getFiles('music');
+  },
+
+  getFiles: function (aType, aCallback) {
     var callback = aCallback || marionetteScriptFinished;
-    var mediaTypes = ['pictures', 'videos', 'music'];
-    var remainingMediaTypes = mediaTypes.length;
-    var media = [];
-    mediaTypes.forEach(function (aType) {
-      console.log('getting', aType);
-      var storage = navigator.getDeviceStorage(aType);
-      var req = storage.enumerate();
-      req.onsuccess = function() {
-        var file = req.result;
-        if (file) {
-          if (aType === 'music' && file.name.slice(0, 5) === 'DCIM/' && file.name.slice(-4) === '.3gp') {
-            req.continue();
-          }
-          else {
-            media.push(file.name);
-            req.continue();
-          }
+    var files = [];
+    console.log('getting', aType);
+    var storage = navigator.getDeviceStorage(aType);
+    var req = storage.enumerate();
+    req.onsuccess = function() {
+      var file = req.result;
+      if (file) {
+        if (aType === 'music' && file.name.slice(0, 13) === '/sdcard/DCIM/' && file.name.slice(-4) === '.3gp') {
+          req.continue();
         }
         else {
-          remainingMediaTypes--;
+          // File.name returns a fully qualified path
+          files.push(file.name);
+          req.continue();
         }
-      };
-      req.onerror = function() {
-        console.error('failed to enumerate ' + aType, req.error.name);
-        callback(false);
-      };
-    });
-
-    waitFor(
-      function () { callback(media); },
-      function () { return remainingMediaTypes === 0; }
-    );
+      }
+      else {
+        callback(files);
+      }
+    };
+    req.onerror = function() {
+      console.error('failed to enumerate ' + aType, req.error.name);
+      callback(false);
+    };
   },
 
   deleteAllSms: function(aCallback) {
@@ -433,7 +436,7 @@ var GaiaDataLayer = {
     let request = sms.getMessages(filter, false);
 
     request.onsuccess = function(event) {
-      cursor = event.target.result;
+      var cursor = event.target.result;
       // Check if message was found
       if (cursor && cursor.message) {
         msgList.push(cursor.message.id);
@@ -493,14 +496,5 @@ var GaiaDataLayer = {
       SpecialPowers.removePermission("sms", document);
       SpecialPowers.clearUserPref("dom.sms.enabled");
     }
-  },
-
-  deleteAllAlarms: function() {
-    window.wrappedJSObject.AlarmManager.getAlarmList (function(aList) {
-      aList.forEach(function(aAlarm) {
-         console.log("Deleting alarm with id  '" + aAlarm.id + "'");
-         window.wrappedJSObject.AlarmManager.delete(aAlarm);
-      });
-    });
   }
 };
