@@ -41,7 +41,7 @@ class TestBenchKraken(GaiaTestCase):
         time.sleep(30)
 
         # start the benchmark
-        self.marionette.tap(run_link)
+        run_link.tap()
 
         # Switch to the chrome, because the page will be automatically
         # redirected as soon as the benchmark is complete
