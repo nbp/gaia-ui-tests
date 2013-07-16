@@ -50,13 +50,13 @@ class TestBenchSunspider(GaiaTestCase):
 
         # scroll to the link location & start the benchmark
         start_now_link.tap()
-        print "Start benchmarking ..."
 
         # Switch to the chrome, because the page will be automatically
         # redirected as soon as the benchmark is complete
         browser.switch_to_chrome()
 
         # wait 6 minutes, to let the becnhmark complete.
+        print "Start benchmarking ..."
         time.sleep(5 * 60)
         browser.switch_to_content()
         self.verify_finished()
