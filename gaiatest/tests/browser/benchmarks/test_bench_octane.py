@@ -35,12 +35,15 @@ class TestBenchOctane(GaiaTestCase):
         print "Verify that the page is correctly loaded."
         self.verify_home_page()
 
+        print "Get octane button."
         run_button = self.marionette.find_element(*self._run_octane_locator)
 
         # wait 30s, to let the system settle.
+        print "wait 30 seconds."
         time.sleep(30)
 
         # run the benchmark
+        print "tap button."
         run_button.tap()
 
         # wait 5 minutes, to let the becnhmark complete.
