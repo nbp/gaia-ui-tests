@@ -59,10 +59,10 @@ class TestBenchOctane(GaiaTestCase):
             try:
                 self.wait_for_element_displayed(*self._run_octane_locator, timeout=180)
                 break
-            except e:
+            except:
                 tested += 1
                 if tested >= 5:
-                    raise e
+                    raise
 
     def verify_finished(self):
         self.wait_for_element_displayed(*self._last_benchmark_locator)
