@@ -54,7 +54,15 @@ class TestBenchOctane(GaiaTestCase):
         self.print_results()
 
     def verify_home_page(self):
-        self.wait_for_element_displayed(*self._run_octane_locator, timeout=180)
+        tested = 0
+        while True:
+            try:
+                self.wait_for_element_displayed(*self._run_octane_locator, timeout=180)
+                break
+            except e:
+                tested += 1
+                if tested >= 5:
+                    raise e
 
     def verify_finished(self):
         self.wait_for_element_displayed(*self._last_benchmark_locator)
