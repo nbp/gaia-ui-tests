@@ -2,6 +2,7 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+from marionette.by import By
 from gaiatest.apps.base import Base
 
 
@@ -9,22 +10,22 @@ class CostControl(Base):
 
     name = 'Usage'
 
-    _usage_app_main_locator = ('id', 'datausage-tab')
-    _usage_app_title_locator = ('css selector', 'h1[data-l10n-id="usage"]')
-    _settings_button_locator = ('css selector', 'button.settings-button')
+    _usage_app_main_locator = (By.ID, 'datausage-tab')
+    _usage_app_title_locator = (By.CSS_SELECTOR, 'h1[data-l10n-id="usage"]')
+    _settings_button_locator = (By.CSS_SELECTOR, 'button.settings-button')
 
-    _mobile_data_item_locator = ('id', 'mobileItem')
-    _mobile_data_tracking_locator = ('id', 'mobileCheck')
-    _mobile_data_label_locator = ('css selector', '#mobileItem label')
-    _mobile_data_usage_figure_locator = ('id', 'mobileOverview')
-    _wifi_data_item_locator = ('id', 'mobileItem')
-    _wifi_data_tracking_locator = ('id', 'wifiCheck')
-    _wifi_data_label_locator = ('css selector', '#wifiItem label')
-    _wifi_data_usage_figure_locator = ('id', 'wifiOverview')
+    _mobile_data_item_locator = (By.ID, 'mobileItem')
+    _mobile_data_tracking_locator = (By.ID, 'mobileCheck')
+    _mobile_data_label_locator = (By.CSS_SELECTOR, '#mobileItem label')
+    _mobile_data_usage_figure_locator = (By.ID, 'mobileOverview')
+    _wifi_data_item_locator = (By.ID, 'mobileItem')
+    _wifi_data_tracking_locator = (By.ID, 'wifiCheck')
+    _wifi_data_label_locator = (By.CSS_SELECTOR, '#wifiItem label')
+    _wifi_data_usage_figure_locator = (By.ID, 'wifiOverview')
 
     # FTE
-    _ftu_frame_locator = ('id', 'fte_view')
-    _ftu_section_locator = ('id', 'firsttime-view')
+    _ftu_frame_locator = (By.ID, 'fte_view')
+    _ftu_section_locator = (By.ID, 'firsttime-view')
 
     @property
     def ftu_step1(self):

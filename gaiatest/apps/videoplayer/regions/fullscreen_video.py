@@ -3,18 +3,19 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 import time
+from marionette.by import By
 from gaiatest.apps.base import Base
 
 
 class FullscreenVideo(Base):
 
-    _video_controls_locator = ('id', 'videoControls')
-    _video_title_locator = ('id', 'video-title')
-    _elapsed_text_locator = ('id', 'elapsed-text')
-    _video_player_locator = ('id', 'player')
-    _video_frame_locator = ('css selector', "iframe[src^='app://video'][src$='view.html']")
-    _video_player_frame_locator = ('id', 'fullscreen-view')
-    _spinner_overlay_locator = ('id','spinner-overlay')
+    _video_controls_locator = (By.ID, 'videoControls')
+    _video_title_locator = (By.ID, 'video-title')
+    _elapsed_text_locator = (By.ID, 'elapsed-text')
+    _video_player_locator = (By.ID, 'player')
+    _video_frame_locator = (By.CSS_SELECTOR, "iframe[src^='app://video'][src$='view.html']")
+    _video_player_frame_locator = (By.ID, 'fullscreen-view')
+    _spinner_overlay_locator = (By.ID, 'spinner-overlay')
 
     def wait_for_player_frame_displayed(self):
         self.wait_for_element_displayed(*self._video_player_frame_locator)

@@ -2,16 +2,17 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+from marionette.by import By
 from gaiatest.apps.base import Base
 from gaiatest.apps.base import PageRegion
 
 
 class SearchResults(Base):
 
-    _search_results_area_locator = ('id', 'search-results')
-    _search_results_loading_locator = ('css selector', 'div.loading')
-    _search_result_locator = ('css selector', '#search-results li.item')
-    _filter_button_locator = ('css selector', '#site-header .header-button.filter')
+    _search_results_area_locator = (By.ID, 'search-results')
+    _search_results_loading_locator = (By.CSS_SELECTOR, 'div.loading')
+    _search_result_locator = (By.CSS_SELECTOR, '#search-results li.item')
+    _filter_button_locator = (By.CSS_SELECTOR, '#site-header .header-button.filter')
 
     def __init__(self, marionette):
         Base.__init__(self, marionette)
@@ -30,10 +31,10 @@ class SearchResults(Base):
 
 class Result(PageRegion):
 
-    _name_locator = ('css selector', '.info > h3')
-    _author_locator = ('css selector', '.info .author')
-    _install_button_locator = ('css selector', '.button.product.install')
-    _price_locator = ('css selector', '.premium.button.product')
+    _name_locator = (By.CSS_SELECTOR, '.info > h3')
+    _author_locator = (By.CSS_SELECTOR, '.info .author')
+    _install_button_locator = (By.CSS_SELECTOR, '.button.product.install')
+    _price_locator = (By.CSS_SELECTOR, '.premium.button.product')
 
     @property
     def name(self):
@@ -64,10 +65,10 @@ class Result(PageRegion):
 
 class FilterResults(Base):
 
-    _apply_locator = ('css selector', '.footer-action > .apply')
-    _all_price_filter_locator = ('css selector', '#filter-prices > li:nth-child(1) > a')
-    _free_price_filter_locator = ('css selector', '#filter-prices > li:nth-child(2) > a')
-    _paid_price_filter_locator = ('css selector', '#filter-prices > li:nth-child(3) > a')
+    _apply_locator = (By.CSS_SELECTOR, '.footer-action > .apply')
+    _all_price_filter_locator = (By.CSS_SELECTOR, '#filter-prices > li:nth-child(1) > a')
+    _free_price_filter_locator = (By.CSS_SELECTOR, '#filter-prices > li:nth-child(2) > a')
+    _paid_price_filter_locator = (By.CSS_SELECTOR, '#filter-prices > li:nth-child(3) > a')
 
     def __init__(self, marionette):
         Base.__init__(self, marionette)

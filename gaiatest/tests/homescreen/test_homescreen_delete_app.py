@@ -2,7 +2,9 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+from marionette.by import By
 from marionette.marionette import Actions
+
 from gaiatest import GaiaTestCase
 
 
@@ -12,15 +14,15 @@ class TestDeleteApp(GaiaTestCase):
     APP_NAME = 'Mozilla QA WebRT Tester'
     APP_INSTALLED = False
 
-    _visible_icon_locator = ('css selector', 'div.page[style*="transform: translateX(0px);"] li.icon[aria-label="%s"]' % APP_NAME)
-    _delete_app_locator = ('css selector', 'li.icon[aria-label="%s"] span.options' % APP_NAME)
+    _visible_icon_locator = (By.CSS_SELECTOR, 'div.page[style*="transform: translateX(0px);"] li.icon[aria-label="%s"]' % APP_NAME)
+    _delete_app_locator = (By.CSS_SELECTOR, 'li.icon[aria-label="%s"] span.options' % APP_NAME)
 
     # App install popup
-    _yes_button_locator = ('id', 'app-install-install-button')
-    _notification_banner_locator = ('id', 'system-banner')
+    _yes_button_locator = (By.ID, 'app-install-install-button')
+    _notification_banner_locator = (By.ID, 'system-banner')
 
     # Delete popup
-    _confirm_delete_locator = ('id', 'confirm-dialog-confirm-button')
+    _confirm_delete_locator = (By.ID, 'confirm-dialog-confirm-button')
 
     def setUp(self):
         GaiaTestCase.setUp(self)

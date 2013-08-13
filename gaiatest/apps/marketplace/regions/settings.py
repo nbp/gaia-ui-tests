@@ -2,22 +2,22 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+from marionette.by import By
 from gaiatest.apps.base import Base
-from gaiatest.apps.base import PageRegion
 
 
 class Settings(Base):
 
     name = 'Marketplace Dev'
 
-    _email_account_field_locator = ('id', 'email')
-    _save_locator = ('css selector', 'footer > p > button')
-    _sign_in_button_locator = ('css selector', 'a.button.persona')
-    _sign_out_button_locator = ('css selector', 'a.button.logout')
-    _back_button_locator = ('id', 'nav-back')
-    _region_select_locator = ('id', 'region')
-    _region_select_value_locator = ('css selector', '#region option[selected]')
-    _save_changes_button_locator = ('xpath', "//section[@id='account-settings']//button[text()='Save Changes']")
+    _email_account_field_locator = (By.ID, 'email')
+    _save_locator = (By.CSS_SELECTOR, 'footer > p > button')
+    _sign_in_button_locator = (By.CSS_SELECTOR, 'a.button.persona')
+    _sign_out_button_locator = (By.CSS_SELECTOR, 'a.button.logout')
+    _back_button_locator = (By.ID, 'nav-back')
+    _region_select_locator = (By.ID, 'region')
+    _region_select_value_locator = (By.CSS_SELECTOR, '#region option[selected]')
+    _save_changes_button_locator = (By.XPATH, "//section[@id='account-settings']//button[text()='Save Changes']")
 
     def __init__(self, marionette):
         Base.__init__(self, marionette)

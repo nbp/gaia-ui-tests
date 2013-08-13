@@ -2,6 +2,7 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+from marionette.by import By
 from gaiatest.apps.base import Base
 
 
@@ -9,21 +10,21 @@ class Settings(Base):
 
     name = 'Settings'
 
-    _header_text_locator = ('css selector', '#root > header > h1')
-    _data_text_locator = ('id', 'data-desc')
-    _airplane_switch_locator = ('xpath', "//input[@name='ril.radio.disabled']/..")
-    _wifi_text_locator = ('id', 'wifi-desc')
-    _gps_enabled_locator = ('xpath', "//input[@name='geolocation.enabled']")
-    _gps_switch_locator = ('xpath', "//input[@name='geolocation.enabled']/..")
-    _cell_data_menu_item_locator = ('id', 'menuItem-cellularAndData')
-    _bluetooth_menu_item_locator = ('id', 'menuItem-bluetooth')
-    _keyboard_menu_item_locator = ("id", "menuItem-keyboard")
-    _language_menu_item_locator = ('id', 'menuItem-languageAndRegion')
-    _do_not_track_menu_item_locator = ('id', 'menuItem-doNotTrack')
-    _media_storage_menu_item_locator = ('id', 'menuItem-mediaStorage')
-    _phone_lock_menu_item_locator = ('id', 'menuItem-phoneLock')
-    _display_menu_item_locator = ('id', 'menuItem-display')
-    _wifi_menu_item_locator = ('id', 'menuItem-wifi')
+    _header_text_locator = (By.CSS_SELECTOR, '#root > header > h1')
+    _data_text_locator = (By.ID, 'data-desc')
+    _airplane_switch_locator = (By.XPATH, "//input[@name='ril.radio.disabled']/..")
+    _wifi_text_locator = (By.ID, 'wifi-desc')
+    _gps_enabled_locator = (By.XPATH, "//input[@name='geolocation.enabled']")
+    _gps_switch_locator = (By.XPATH, "//input[@name='geolocation.enabled']/..")
+    _cell_data_menu_item_locator = (By.ID, 'menuItem-cellularAndData')
+    _bluetooth_menu_item_locator = (By.ID, 'menuItem-bluetooth')
+    _keyboard_menu_item_locator = (By.ID, "menuItem-keyboard")
+    _language_menu_item_locator = (By.ID, 'menuItem-languageAndRegion')
+    _do_not_track_menu_item_locator = (By.ID, 'menuItem-doNotTrack')
+    _media_storage_menu_item_locator = (By.ID, 'menuItem-mediaStorage')
+    _phone_lock_menu_item_locator = (By.ID, 'menuItem-phoneLock')
+    _display_menu_item_locator = (By.ID, 'menuItem-display')
+    _wifi_menu_item_locator = (By.ID, 'menuItem-wifi')
 
     def launch(self):
         Base.launch(self)

@@ -3,23 +3,13 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 from gaiatest import GaiaTestCase
-from marionette.marionette import Actions
+from gaiatest.apps.lockscreen.app import LockScreen
 
 
 class TestCameraUnlockWithPasscode(GaiaTestCase):
 
     # Input data
     _input_passcode = '7931'
-
-    _camera_button_locator = ('id', 'lockscreen-area-camera')
-    _lockscreen_handle_locator = ('id', 'lockscreen-area-handle')
-    _lockscreen_icon_area_locator = ('id', 'lockscreen-icon-container')
-
-    _camera_frame_locator = ('css selector', 'iframe[src^="./camera/index.html"]')
-    _capture_button_locator = ('css selector', '#capture-button:not([disabled])')
-    _gallery_button_locator = ('id', 'gallery-button')
-
-    _switch_source_button_locator = ('id', 'switch-button')
 
     def setUp(self):
         GaiaTestCase.setUp(self)
@@ -32,46 +22,18 @@ class TestCameraUnlockWithPasscode(GaiaTestCase):
 
         # this time we need it locked!
         self.lockscreen.lock()
-        self.wait_for_element_displayed(*self._lockscreen_handle_locator)
+        self.lock_screen = LockScreen(self.marionette)
+        self.lock_screen.wait_for_lockscreen_handle_visible()
 
     def test_unlock_to_camera_with_passcode(self):
         # https://github.com/mozilla/gaia-ui-tests/issues/479
 
-        self._swipe_and_unlock()
+        self.lock_screen.swipe_to_unlock()
+        camera = self.lock_screen.tap_camera_button()
 
-        # Tap does not work here
-        camera_button = self.marionette.find_element(*self._camera_button_locator)
-        camera_button.tap()
+        self.assertFalse(camera.is_gallery_button_visible)
 
-        self.wait_for_element_present(*self._camera_frame_locator)
-        camera_frame = self.marionette.find_element(*self._camera_frame_locator)
-        self.marionette.switch_to_frame(camera_frame)
+        camera.tap_switch_source()
+        camera.wait_for_capture_ready()
 
-        # Wait fot the capture button displayed. no need to take a photo.
-        self.wait_for_element_displayed(*self._capture_button_locator)
-
-        self.assertFalse(self.is_element_displayed(*self._gallery_button_locator))
-
-        switch_source_button = self.marionette.find_element(*self._switch_source_button_locator)
-        switch_source_button.tap()
-
-        self.wait_for_element_present(*self._capture_button_locator)
-
-        self.assertFalse(self.is_element_displayed(*self._gallery_button_locator))
-
-    def _swipe_and_unlock(self):
-
-        unlock_handle = self.marionette.find_element(*self._lockscreen_handle_locator)
-        unlock_handle_x_centre = int(unlock_handle.size['width'] / 2)
-        unlock_handle_y_centre = int(unlock_handle.size['height'] / 2)
-
-        # Get the end position from the demo animation
-        lockscreen_icon_area = self.marionette.find_element(*self._lockscreen_icon_area_locator)
-        end_animation_position = lockscreen_icon_area.size['height'] - unlock_handle.size['height']
-
-        # Flick from unlock handle to (0, -end_animation_position) over 800ms duration
-        Actions(self.marionette).flick(unlock_handle, unlock_handle_x_centre, unlock_handle_y_centre, 0, 0 - end_animation_position).perform()
-
-        # Wait for the svg to animate and handle to disappear
-        # TODO add assertion that unlock buttons are visible after bug 813561 is fixed
-        self.wait_for_condition(lambda m: not unlock_handle.is_displayed())
+        self.assertFalse(camera.is_gallery_button_visible)

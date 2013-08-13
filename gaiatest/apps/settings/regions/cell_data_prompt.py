@@ -2,13 +2,14 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+from marionette.by import By
 from gaiatest.apps.base import Base
 
 
 class CellDataPrompt(Base):
 
-    _cell_data_prompt_container_locator = ('css selector', '#carrier-dc-warning')
-    _cell_data_prompt_turn_on_button_locator = ('css selector', '#carrier-dc-warning button[type="submit"]')
+    _cell_data_prompt_container_locator = (By.CSS_SELECTOR, '#carrier-dc-warning')
+    _cell_data_prompt_turn_on_button_locator = (By.CSS_SELECTOR, '#carrier-dc-warning button[type="submit"]')
 
     def __init__(self, marionette):
         Base.__init__(self, marionette)

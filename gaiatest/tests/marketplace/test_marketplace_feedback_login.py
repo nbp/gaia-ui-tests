@@ -37,9 +37,7 @@ class TestMarketplaceFeedback(GaiaTestCase):
         self.marionette.switch_to_frame()
         self.marketplace.launch()
 
-        # go to settings section in marketplace app and go to feedback tab
-        self.marketplace.wait_for_setting_displayed()
-        settings = self.marketplace.tap_settings()
+        # go to feedback tab
         self.marketplace.select_setting_feedback()
 
         # enter and submit your feedback

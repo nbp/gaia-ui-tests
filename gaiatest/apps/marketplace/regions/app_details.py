@@ -2,15 +2,16 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+from marionette.by import By
 from gaiatest.apps.base import Base
 
 
 class Details(Base):
 
-    _write_review_locator = ('id', 'add-review')
-    _app_details_locator = ('css selector', '.detail')
-    _first_review_locator = ('css selector', 'li:first-child .review-inner > span')
-    _first_review_body_locator = ('css selector', 'li:first-child .body')
+    _write_review_locator = (By.ID, 'add-review')
+    _app_details_locator = (By.CSS_SELECTOR, '.detail')
+    _first_review_locator = (By.CSS_SELECTOR, 'li:first-child .review-inner > span')
+    _first_review_body_locator = (By.CSS_SELECTOR, 'li:first-child .body')
 
     def __init__(self, marionette):
         Base.__init__(self, marionette)

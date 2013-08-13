@@ -2,9 +2,7 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-import random
-import time
-
+from marionette.by import By
 from gaiatest.apps.base import Base
 
 
@@ -13,10 +11,10 @@ class AddReview(Base, dict):
     Page for adding reviews.
     """
 
-    _add_review_input_field_locator = ('id', 'id_body')
-    _submit_review_button_locator = ('css selector', 'button[type="submit"]')
-    _review_box_locator = ('css selector', '.add-review-form')
-    _rating_locator = ('css selector', ".ratingwidget.stars-0 > label[data-stars='%s']")
+    _add_review_input_field_locator = (By.ID, 'id_body')
+    _submit_review_button_locator = (By.CSS_SELECTOR, 'button[type="submit"]')
+    _review_box_locator = (By.CSS_SELECTOR, '.add-review-form')
+    _rating_locator = (By.CSS_SELECTOR, ".ratingwidget.stars-0 > label[data-stars='%s']")
 
     def __init__(self, marionette, **kwargs):
         Base.__init__(self, marionette)

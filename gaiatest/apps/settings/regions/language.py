@@ -2,13 +2,14 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+from marionette.by import By
 from gaiatest.apps.base import Base
 
 
 class Language(Base):
 
-    _select_language_locator = ('css selector', '#languages li:nth-child(2) .fake-select button')
-    _back_button_locator = ('css selector', ".current header > a")
+    _select_language_locator = (By.CSS_SELECTOR, '#languages li:nth-child(2) .fake-select button')
+    _back_button_locator = (By.CSS_SELECTOR, '.current header > a')
 
     def go_back(self):
         self.marionette.find_element(*self._back_button_locator).tap()
@@ -29,8 +30,8 @@ class Language(Base):
 
         self.wait_for_condition(lambda m: len(self.marionette.find_elements('css selector', '#value-selector-container li')) > 0)
 
-        options = self.marionette.find_elements('css selector', '#value-selector-container li')
-        close_button = self.marionette.find_element('css selector', 'button.value-option-confirm')
+        options = self.marionette.find_elements(By.CSS_SELECTOR, '#value-selector-container li')
+        close_button = self.marionette.find_element(By.CSS_SELECTOR, 'button.value-option-confirm')
 
         # loop options until we find the match
         for li in options:

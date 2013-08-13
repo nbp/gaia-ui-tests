@@ -2,17 +2,18 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+from marionette.by import By
 from gaiatest.apps.base import Base
 
 
 class Display(Base):
 
-    _wallpaper_preview_locator = ('id', 'wallpaper-preview')
-    _wallpaper_pick_locator = ('id', 'wallpaper')
-    _wallpaper_button_locator = ('css selector', "a[data-value='0']")
-    _wallpaper_title_locator = ('css selector', "h1[data-l10n-id='select-wallpaper']")
-    _stock_wallpapers_locator = ('css selector', "div[class='wallpaper']")
-    _wallpaper_frame_locator = ('css selector', "iframe[src^='app://wallpaper'][src$='pick.html']")
+    _wallpaper_preview_locator = (By.ID, 'wallpaper-preview')
+    _wallpaper_pick_locator = (By.ID, 'wallpaper')
+    _wallpaper_button_locator = (By.CSS_SELECTOR, "a[data-value='0']")
+    _wallpaper_title_locator = (By.CSS_SELECTOR, "h1[data-l10n-id='select-wallpaper']")
+    _stock_wallpapers_locator = (By.CSS_SELECTOR, "div[class='wallpaper']")
+    _wallpaper_frame_locator = (By.CSS_SELECTOR, "iframe[src^='app://wallpaper'][src$='pick.html']")
 
     @property
     def wallpaper_preview_src(self):

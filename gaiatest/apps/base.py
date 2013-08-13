@@ -21,8 +21,8 @@ class Base(object):
         self.apps = GaiaApps(self.marionette)
         self.frame = None
 
-    def launch(self):
-        self.app = self.apps.launch(self.name)
+    def launch(self, launch_timeout=None):
+        self.app = self.apps.launch(self.name, launch_timeout=launch_timeout)
 
     def wait_for_element_present(self, by, locator, timeout=_default_timeout):
         timeout = float(timeout) + time.time()
@@ -97,11 +97,14 @@ class Base(object):
             raise TimeoutException(message)
 
     def is_element_present(self, by, locator):
+        self.marionette.set_search_timeout(0)
         try:
             self.marionette.find_element(by, locator)
             return True
         except NoSuchElementException:
             return False
+        finally:
+            self.marionette.set_search_timeout(10000)
 
     def is_element_displayed(self, by, locator):
         try:

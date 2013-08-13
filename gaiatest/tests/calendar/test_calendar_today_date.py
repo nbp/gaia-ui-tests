@@ -3,20 +3,15 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 import datetime
-import calendar
-import time
+from marionette.by import By
 
 from gaiatest import GaiaTestCase
 
 
-DAYS_OF_WEEK = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY',
-                'SATURDAY', 'SUNDAY']
-
-
 class TestCalendar(GaiaTestCase):
 
-    _current_month_year_locator = ('id', 'current-month-year')
-    _selected_day_title_locator = ('id', 'selected-day-title')
+    _current_month_year_locator = (By.ID, 'current-month-year')
+    _selected_day_title_locator = (By.ID, 'selected-day-title')
 
     def setUp(self):
         GaiaTestCase.setUp(self)
@@ -25,12 +20,8 @@ class TestCalendar(GaiaTestCase):
 
             # Setting the time on the device back to 12:00am of the current day
             # this way the event created will always be on this day and we can check it easily
-            _seconds_since_epoch = self.marionette.execute_script("""
-                    var today = new Date();
-                    var yr = today.getFullYear();
-                    var mth = today.getMonth();
-                    var day = today.getDate();
-                    return new Date(yr, mth, day, 0, 0, 0).getTime();""")
+
+            _seconds_since_epoch = self.marionette.execute_script("return Date.now();")
 
             self.today = datetime.datetime.fromtimestamp(_seconds_since_epoch / 1000)
 

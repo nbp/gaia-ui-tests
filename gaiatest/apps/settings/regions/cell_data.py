@@ -2,15 +2,16 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+from marionette.by import By
 from gaiatest.apps.base import Base
 from gaiatest.apps.settings.regions.cell_data_prompt import CellDataPrompt
 
 
 class CellData(Base):
 
-    _carrier_name_locator = ('id', 'dataNetwork-desc')
-    _cell_data_enabled_input_locator = ('xpath', "//input[@name='ril.data.enabled']")
-    _cell_data_enabled_label_locator = ('xpath', "//input[@name='ril.data.enabled']/..")
+    _carrier_name_locator = (By.ID, 'dataNetwork-desc')
+    _cell_data_enabled_input_locator = (By.XPATH, "//input[@name='ril.data.enabled']")
+    _cell_data_enabled_label_locator = (By.XPATH, "//input[@name='ril.data.enabled']/..")
 
     @property
     def carrier_name(self):

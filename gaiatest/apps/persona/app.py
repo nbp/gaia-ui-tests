@@ -2,29 +2,30 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+from marionette.by import By
 from gaiatest.apps.base import Base
 
 
 class Persona(Base):
 
     # iframes
-    _persona_frame_locator = ('css selector', "iframe.screen[data-url*='persona.org/sign_in#NATIVE']")
+    _persona_frame_locator = (By.CSS_SELECTOR, "iframe.screen[data-url*='persona.org/sign_in#NATIVE']")
 
     # persona login
-    _body_loading_locator = ('css selector', 'body.loading')
-    _email_input_locator = ('id', 'authentication_email')
-    _password_input_locator = ('id', 'authentication_password')
-    _continue_button_locator = ('css selector', '.continue.right')
-    _returning_button_locator = ('css selector', 'button.isReturning')
-    _sign_in_button_locator = ('id', 'signInButton')
-    _this_session_only_button_locator = ('id', 'this_is_not_my_computer')
-    _this_is_not_me_locator = ('css selector', 'p.isMobile a.thisIsNotMe')
+    _body_loading_locator = (By.CSS_SELECTOR, 'body.loading')
+    _email_input_locator = (By.ID, 'authentication_email')
+    _password_input_locator = (By.ID, 'authentication_password')
+    _continue_button_locator = (By.CSS_SELECTOR, '.continue.right')
+    _returning_button_locator = (By.CSS_SELECTOR, 'button.isReturning')
+    _sign_in_button_locator = (By.ID, 'signInButton')
+    _this_session_only_button_locator = (By.ID, 'this_is_not_my_computer')
+    _this_is_not_me_locator = (By.CSS_SELECTOR, 'p.isMobile a.thisIsNotMe')
 
-    _create_password_locator = ('id', 'password')
-    _confirm_password_locator = ('id', 'vpassword')
-    _verify_user_locator = ('id', 'verify_user')
+    _create_password_locator = (By.ID, 'password')
+    _confirm_password_locator = (By.ID, 'vpassword')
+    _verify_user_locator = (By.ID, 'verify_user')
 
-    _form_section_locator = ('css selector', 'div.vertical div.form_section')
+    _form_section_locator = (By.CSS_SELECTOR, 'div.vertical div.form_section')
 
     def __init__(self, marionette):
         Base.__init__(self, marionette)

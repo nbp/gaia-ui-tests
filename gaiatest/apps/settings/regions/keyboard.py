@@ -2,13 +2,14 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+from marionette.by import By
 from gaiatest.apps.base import Base
 
 
 class Keyboard(Base):
 
     _select_language_locator = (
-        "xpath",
+        By.XPATH,
         "//section[@id='keyboard']//li/label[input[@name='keyboard.layouts.%s']]"
     )
 

@@ -2,6 +2,7 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+from marionette.by import By
 from gaiatest import GaiaTestCase
 from gaiatest.apps.browser.app import Browser
 from gaiatest.apps.cost_control.app import CostControl
@@ -10,11 +11,11 @@ from gaiatest.apps.cost_control.app import CostControl
 class TestCostControlDataAlertMobile(GaiaTestCase):
 
     # notification bar locators
-    _cost_control_widget_locator = ('css selector', 'iframe[data-frame-origin="app://costcontrol.gaiamobile.org"]')
-    _data_usage_view_locator = ('id', 'datausage-limit-view')
+    _cost_control_widget_locator = (By.CSS_SELECTOR, 'iframe[data-frame-origin="app://costcontrol.gaiamobile.org"]')
+    _data_usage_view_locator = (By.ID, 'datausage-limit-view')
 
     # locator for page loaded in browser
-    _page_body_locator = ("id", "home")
+    _page_body_locator = (By.ID, 'home')
 
     def test_cost_control_data_alert_mobile(self):
 

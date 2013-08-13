@@ -2,14 +2,15 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+from marionette.by import By
 from gaiatest.apps.base import Base
 
 
 class Bluetooth(Base):
 
-    _bluetooth_region_visible_locator = ('css selector', '#bluetooth.current')
-    _bluetooth_checkbox_locator = ('css selector', '#bluetooth-status input')
-    _bluetooth_label_locator = ('css selector', '#bluetooth-status span')
+    _bluetooth_region_visible_locator = (By.CSS_SELECTOR, '#bluetooth.current')
+    _bluetooth_checkbox_locator = (By.CSS_SELECTOR, '#bluetooth-status input')
+    _bluetooth_label_locator = (By.CSS_SELECTOR, '#bluetooth-status span')
 
     @property
     def is_bluetooth_enabled(self):

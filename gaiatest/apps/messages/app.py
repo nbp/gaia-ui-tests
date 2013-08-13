@@ -2,14 +2,15 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+from marionette.by import By
 from gaiatest.apps.base import Base
 
 
 class Messages(Base):
 
     name = 'Messages'
-    _summary_header_locator = ('css selector', "h1[data-l10n-id='messages']")
-    _create_new_message_locator = ('id', 'icon-add')
+    _summary_header_locator = (By.CSS_SELECTOR, "h1[data-l10n-id='messages']")
+    _create_new_message_locator = (By.ID, 'icon-add')
 
     def launch(self):
         Base.launch(self)

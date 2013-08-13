@@ -2,6 +2,7 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+from marionette.by import By
 from gaiatest import GaiaTestCase
 from gaiatest.apps.marketplace.app import Marketplace
 
@@ -13,10 +14,10 @@ class TestSearchMarketplaceAndInstallApp(GaiaTestCase):
     APP_INSTALLED = False
 
     # Label identifier for all homescreen apps
-    _homescreen_iframe_locator = ('css selector', 'div.homescreen iframe')
+    _homescreen_iframe_locator = (By.CSS_SELECTOR, 'div.homescreen iframe')
 
     # System app confirmation button to confirm installing an app
-    _yes_button_locator = ('id', 'app-install-install-button')
+    _yes_button_locator = (By.ID, 'app-install-install-button')
 
     def setUp(self):
         GaiaTestCase.setUp(self)

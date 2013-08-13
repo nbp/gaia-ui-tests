@@ -496,5 +496,53 @@ var GaiaDataLayer = {
       SpecialPowers.removePermission("sms", document);
       SpecialPowers.clearUserPref("dom.sms.enabled");
     }
-  }
+  },
+
+  bluetoothSetDeviceName: function(device_name, aCallback) {
+    var callback = aCallback || marionetteScriptFinished;
+    console.log("Setting device's bluetooth name to '%s'" % device_name);
+
+    var req = window.navigator.mozBluetooth.getDefaultAdapter();
+    req.onsuccess = function() {
+      var adapter = req.result;
+      var req_set_name = adapter.setName(device_name);
+      req_set_name.onsuccess = function() {
+    	  callback(true);
+      };
+      req_set_name.onerror = function(event) {
+    	console.log("setName returned unexpected error: " + event.target.error.name);
+    	callback(false);
+      };
+    };
+    req.onerror = function(event) {
+      console.log("getDefaultAdapter returned unexpected error: " + event.target.error.name);
+      callback(false);
+    };
+  },
+
+  bluetoothSetDeviceDiscoverableMode: function(discoverable, aCallback) {
+	var callback = aCallback || marionetteScriptFinished;
+	if (discoverable == true) {
+	  console.log("Making the device discoverable via bluetooth");
+	} else {
+	  console.log("Turning device bluetooth discoverable mode OFF");
+	}
+
+    var req = window.navigator.mozBluetooth.getDefaultAdapter();
+    req.onsuccess = function() {
+      var adapter = req.result;
+      var req_discoverable = adapter.setDiscoverable(discoverable);
+      req_discoverable.onsuccess = function() {
+        callback(true);
+      };
+      req_discoverable.onerror = function(event) {
+    	console.log("setDiscoverable returned unexpected error: " + event.target.error.name);
+    	callback(false);
+      };
+    };
+    req.onerror = function(event) {
+      console.log("getDefaultAdapter returned unexpected error: " + event.target.error.name);
+      callback(false);
+    };
+  }  
 };

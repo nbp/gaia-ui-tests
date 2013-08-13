@@ -1,3 +1,8 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+from marionette.by import By
 from gaiatest import GaiaTestCase
 
 MANIFEST = 'http://mozqa.com/data/webapps/mozqa.com/manifest.webapp'
@@ -6,13 +11,13 @@ TITLE = 'Index of /data'
 
 
 class TestLaunchApp(GaiaTestCase):
-    _yes_button_locator = ('id', 'app-install-install-button')
-    _installed_app_locator = ('css selector', 'li.icon[aria-label="%s"]' % APP_NAME)
+    _yes_button_locator = (By.ID, 'app-install-install-button')
+    _installed_app_locator = (By.CSS_SELECTOR, 'li.icon[aria-label="%s"]' % APP_NAME)
 
     # locator for li.icon, because click on label doesn't work.
-    _visible_icon_locator = ('css selector', 'div.page[style*="transform: translateX(0px);"] li.icon[aria-label="%s"]' % APP_NAME)
-    _app_locator = ('css selector', 'iframe[src="http://mozqa.com/data"]')
-    _header_locator = ('css selector', 'h1')
+    _visible_icon_locator = (By.CSS_SELECTOR, 'div.page[style*="transform: translateX(0px);"] li.icon[aria-label="%s"]' % APP_NAME)
+    _app_locator = (By.CSS_SELECTOR, 'iframe[src="http://mozqa.com/data"]')
+    _header_locator = (By.CSS_SELECTOR, 'h1')
 
     def setUp(self):
         GaiaTestCase.setUp(self)

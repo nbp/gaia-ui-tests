@@ -4,53 +4,27 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 from gaiatest import GaiaTestCase
+from gaiatest.apps.everythingme.app import EverythingMe
 
 
 class TestEverythingMeSearch(GaiaTestCase):
-
-    # Everything.Me locators
-    _shortcut_items_locator = ('css selector', '#shortcuts-items li')
-    _search_box_locator = ('id', 'search-q')
-    _search_tips_locator = ('css selector', '#helper ul:not(.anim) li[data-index]')
-
-    # Homescreen locators
-    _homescreen_frame_locator = ('css selector', 'div.homescreen > iframe')
-
-    # Search string
-    _test_string = "skyfall"
 
     def setUp(self):
         GaiaTestCase.setUp(self)
         self.apps.set_permission('Homescreen', 'geolocation', 'deny')
         self.connect_to_network()
+        self.everythingme = EverythingMe(self.marionette)
 
     def test_launch_everything_me_search(self):
+        # Tests a search with a common string.
+        # Asserts that the title and shortcuts are listed
 
-        # swipe to Everything.Me
-        hs_frame = self.marionette.find_element(*self._homescreen_frame_locator)
-        self.marionette.switch_to_frame(hs_frame)
+        test_string = u'skyfall'
+        self.everythingme.go_to_everything_me()
 
-        # We'll use js to flick pages for reliability/Touch is unreliable
-        self.marionette.execute_script("window.wrappedJSObject.GridManager.goToPreviousPage();")
-        self.wait_for_condition(lambda m: m.find_element('tag name', 'body')
-            .get_attribute('data-transitioning') != 'true')
+        self.everythingme.wait_for_search_box_displayed()
+        self.everythingme.type_into_search_box(test_string)
+        self.assertIn(test_string, self.everythingme.search_title)
 
-        # Find the search box and clear it
-        self.wait_for_element_displayed(*self._search_box_locator)
-        search_input = self.marionette.find_element(*self._search_box_locator)
-        search_input.clear()
-
-        # Enter the string to search
-        search_input.send_keys(self._test_string)
-        search_input.click()
-
-        # Wait for the search suggestions and then tap on the first one
-        self.wait_for_condition(lambda m: len(m.find_elements(*self._search_tips_locator)) > 0)
-        self.wait_for_element_displayed(*self._search_tips_locator)
-        self.marionette.find_element(*self._search_tips_locator).tap()
-
-        # Wait for the apps to appear
-        self.wait_for_element_present(*self._shortcut_items_locator)
-        shortcuts = self.marionette.find_elements(*self._shortcut_items_locator)
-        self.assertGreater(len(shortcuts), 0, 'No shortcut categories found')
-        self.keyboard.tap_enter()
+        self.everythingme.wait_for_app_icons_displayed()
+        self.assertGreater(self.everythingme.apps_count, 0, 'No apps found')

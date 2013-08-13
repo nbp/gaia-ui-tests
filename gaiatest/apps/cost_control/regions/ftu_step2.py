@@ -2,16 +2,16 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-import time
+from marionette.by import By
 from gaiatest.apps.cost_control.app import CostControl
 from gaiatest.apps.cost_control.regions.ftu_step3 import FTUStep3
 
 
 class FTUStep2(CostControl):
 
-    _reset_report_menu_locator = ('css selector', '#non-vivo-step-1 menu')
-    _reset_report_period_select_locator = ('css selector', '#non-vivo-step-1 ul li:nth-child(1) span')
-    _next_button_locator = ('css selector', '#non-vivo-step-1 span[data-l10n-id="next"]')
+    _reset_report_menu_locator = (By.CSS_SELECTOR, '#non-vivo-step-1 menu')
+    _reset_report_period_select_locator = (By.CSS_SELECTOR, '#non-vivo-step-1 ul li:nth-child(1) span')
+    _next_button_locator = (By.CSS_SELECTOR, '#non-vivo-step-1 span[data-l10n-id="next"]')
 
     def __init__(self, marionette):
         CostControl.__init__(self, marionette)

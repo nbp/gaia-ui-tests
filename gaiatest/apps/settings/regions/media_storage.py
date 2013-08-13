@@ -2,14 +2,15 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+from marionette.by import By
 from gaiatest.apps.base import Base
 
 
 class MediaStorage(Base):
 
-    _music_size_locator = ('css selector', '.color-music > a > .size')
-    _pictures_size_locator = ('css selector', '.color-pictures > a > .size')
-    _movies_size_locator = ('css selector', '.color-videos > a > .size')
+    _music_size_locator = (By.CSS_SELECTOR, '.color-music > a > .size')
+    _pictures_size_locator = (By.CSS_SELECTOR, '.color-pictures > a > .size')
+    _movies_size_locator = (By.CSS_SELECTOR, '.color-videos > a > .size')
 
     def __init__(self, marionette):
         Base.__init__(self, marionette)
