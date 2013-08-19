@@ -15,8 +15,7 @@ class LockScreen(Base):
     _lockscreen_handle_locator = (By.ID, 'lockscreen-area-handle')
     _unlock_button_locator = (By.ID, 'lockscreen-area-unlock')
     _camera_button_locator = (By.ID, 'lockscreen-area-camera')
-
-    _camera_frame_locator = (By.CSS_SELECTOR, 'iframe[src*="camera"][src*="/index.html"]')
+    _passcode_pad_locator = (By.ID, 'lockscreen-passcode-pad')
 
     def swipe_to_unlock(self):
 
@@ -43,15 +42,21 @@ class LockScreen(Base):
         self.marionette.find_element(*self._camera_button_locator).tap()
         self.wait_for_lockscreen_not_visible()
 
-        self.marionette.switch_to_frame()
-        self.wait_for_element_present(*self._camera_frame_locator)
-        self.marionette.switch_to_frame(self.marionette.find_element(*self._camera_frame_locator))
-
         from gaiatest.apps.camera.app import Camera
-        return Camera(self.marionette)
+        camera = Camera(self.marionette)
+        camera.switch_to_camera_frame()
+
+        return camera
 
     def wait_for_lockscreen_not_visible(self):
         self.wait_for_condition(lambda m: not self.marionette.find_element(*self._lockscreen_locator).location['x'] == 0, message="Lockscreen still visible after unlock")
 
     def wait_for_lockscreen_handle_visible(self):
         self.wait_for_element_displayed(*self._lockscreen_handle_locator)
+
+    @property
+    def passcode_pad(self):
+        self.wait_for_element_displayed(*self._passcode_pad_locator)
+        passcode_pad = self.marionette.find_element(*self._passcode_pad_locator)
+        from gaiatest.apps.lockscreen.regions.passcode_pad import PasscodePad
+        return PasscodePad(self.marionette, passcode_pad)

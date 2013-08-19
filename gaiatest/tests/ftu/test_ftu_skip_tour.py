@@ -153,13 +153,11 @@ class TestFtu(GaiaTestCase):
 
         # Set timezone
         continent_select = self.marionette.find_element(*self._timezone_continent_locator)
-        # Click to activate the b2g select element (tap does not work see bug 833061)
-        continent_select.click()
+        continent_select.tap()
         self._select("Asia")
 
         city_select = self.marionette.find_element(*self._timezone_city_locator)
-        # Click to activate the b2g select element (tap does not work see bug 833061)
-        city_select.click()
+        city_select.tap()
         self._select("Almaty")
 
         self.assertEqual(self.marionette.find_element(*self._time_zone_title_locator).text,

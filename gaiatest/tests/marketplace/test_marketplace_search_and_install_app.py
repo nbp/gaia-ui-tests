@@ -5,6 +5,7 @@
 from marionette.by import By
 from gaiatest import GaiaTestCase
 from gaiatest.apps.marketplace.app import Marketplace
+from gaiatest.apps.homescreen.app import Homescreen
 
 
 class TestSearchMarketplaceAndInstallApp(GaiaTestCase):
@@ -12,9 +13,6 @@ class TestSearchMarketplaceAndInstallApp(GaiaTestCase):
     MARKETPLACE_DEV_NAME = 'Marketplace Dev'
 
     APP_INSTALLED = False
-
-    # Label identifier for all homescreen apps
-    _homescreen_iframe_locator = (By.CSS_SELECTOR, 'div.homescreen iframe')
 
     # System app confirmation button to confirm installing an app
     _yes_button_locator = (By.ID, 'app-install-install-button')
@@ -47,10 +45,10 @@ class TestSearchMarketplaceAndInstallApp(GaiaTestCase):
         self.APP_INSTALLED = True
 
         # Check that the icon of the app is on the homescreen
-        self.marionette.switch_to_frame()
-        homescreen_frame = self.marionette.find_element(*self._homescreen_iframe_locator)
-        self.marionette.switch_to_frame(homescreen_frame)
-        self.assertTrue(self.marionette.find_element('xpath', "//li[@class='icon']//span[text()='%s']" % self.app_name))
+        homescreen = Homescreen(self.marionette)
+        homescreen.switch_to_homescreen_frame()
+
+        self.assertTrue(homescreen.is_app_installed(self.app_name))
 
     def confirm_installation(self):
         # TODO add this to the system app object when we have one

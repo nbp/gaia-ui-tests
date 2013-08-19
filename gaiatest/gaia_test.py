@@ -11,6 +11,7 @@ import traceback
 
 from marionette import MarionetteTestCase
 from marionette import Marionette
+from marionette.by import By
 from marionette.errors import NoSuchElementException
 from marionette.errors import ElementNotVisibleException
 from marionette.errors import TimeoutException
@@ -510,7 +511,7 @@ class GaiaTestCase(MarionetteTestCase):
         self.marionette.execute_script("window.wrappedJSObject.dispatchEvent(new Event('home'));")
 
     def install_marketplace(self):
-        _yes_button_locator = ('id', 'app-install-install-button')
+        _yes_button_locator = (By.ID, 'app-install-install-button')
         mk = {"name": "Marketplace Dev",
               "manifest": "https://marketplace-dev.allizom.org/manifest.webapp ",
               }

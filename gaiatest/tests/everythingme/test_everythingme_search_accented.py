@@ -4,7 +4,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 from gaiatest import GaiaTestCase
-from gaiatest.apps.everythingme.app import EverythingMe
+from gaiatest.apps.homescreen.app import Homescreen
 
 
 class TestEverythingMeSearchAccented(GaiaTestCase):
@@ -13,18 +13,17 @@ class TestEverythingMeSearchAccented(GaiaTestCase):
         GaiaTestCase.setUp(self)
         self.apps.set_permission('Homescreen', 'geolocation', 'deny')
         self.connect_to_network()
-        self.everythingme = EverythingMe(self.marionette)
 
     def test_launch_everything_me_search_accented(self):
         # Tests a search with accented characters.
         # Asserts that title and shortcut results are returned correctly
 
-        test_string = u'Özdemir Erdoğan'
-        self.everythingme.go_to_everything_me()
+        test_string = u'Pétanque'
+        homescreen = Homescreen(self.marionette)
+        homescreen.launch()
 
-        self.everythingme.wait_for_search_box_displayed()
-        self.everythingme.type_into_search_box(test_string)
-        self.assertIn(test_string.lower(), self.everythingme.search_title)
+        search_panel = homescreen.tap_search_bar()
+        search_panel.type_into_search_box(test_string)
+        search_panel.wait_for_everything_me_results_to_load()
 
-        self.everythingme.wait_for_app_icons_displayed()
-        self.assertGreater(self.everythingme.apps_count, 0, 'No apps found')
+        self.assertGreater(search_panel.everything_me_apps_count, 0)

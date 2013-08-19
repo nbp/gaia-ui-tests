@@ -15,6 +15,7 @@ class SettingsForm(Base):
     _import_from_sim_button_locator = (By.CSS_SELECTOR, 'button.icon-sim[data-l10n-id="importSim2"]')
     _import_from_gmail_button_locator = (By.CSS_SELECTOR, 'button.icon-gmail[data-l10n-id="importGmail"]')
     _import_from_windows_live_button_locator = (By.CSS_SELECTOR, 'button.icon-live[data-l10n-id="importLive"]')
+    _import_contacts_locator = (By.CSS_SELECTOR, 'button.icon-import')
 
     def __init__(self, marionette):
         Base.__init__(self, marionette)
@@ -30,6 +31,10 @@ class SettingsForm(Base):
     @property
     def order_by_last_name(self):
         return self.marionette.find_element(*self._order_by_last_name_switch_locator).is_selected()
+
+    def tap_import_contacts(self):
+        self.wait_for_element_displayed(*self._import_contacts_locator)
+        self.marionette.find_element(*self._import_contacts_locator).tap()
 
     def tap_import_from_sim(self):
         self.wait_for_element_displayed(*self._import_from_sim_button_locator)

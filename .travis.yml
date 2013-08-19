@@ -6,8 +6,8 @@ python:
   - 2.7
 install: python setup.py install
 before_script:
-  - curl -k -L -O https://ftp.mozilla.org/pub/mozilla.org/b2g/nightly/latest-mozilla-central/b2g-25.0a1.multi.linux-x86_64.tar.bz2
-  - tar xvjf b2g-25.0a1.multi.linux-x86_64.tar.bz2
+  - curl -k -L -O https://ftp.mozilla.org/pub/mozilla.org/b2g/nightly/latest-mozilla-central/b2g-26.0a1.multi.linux-x86_64.tar.bz2
+  - tar xvjf b2g-26.0a1.multi.linux-x86_64.tar.bz2
   - sh -e /etc/init.d/xvfb start
   - sleep 10
   - echo "{\"acknowledged_risks\":true,\"skip_warning\":true}" > testvars.json

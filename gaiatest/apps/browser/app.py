@@ -106,6 +106,11 @@ class Browser(Base):
     def tap_add_bookmark_to_home_screen_dialog_button(self):
         self.wait_for_element_displayed(*self._add_bookmark_to_home_screen_dialog_button_locator)
         self.marionette.find_element(*self._add_bookmark_to_home_screen_dialog_button_locator).tap()
+
+        # Wait for the Add to bookmark frame to be dismissed
+        self.marionette.switch_to_frame()
+        self.wait_for_element_not_displayed(*self._add_bookmark_to_home_screen_frame_locator)
+
         self.switch_to_chrome()
 
     def type_bookmark_title(self, value):

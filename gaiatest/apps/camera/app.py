@@ -23,6 +23,10 @@ class Camera(Base):
     _body_locator = (By.TAG_NAME, 'body')
     _gallery_button_locator = (By.ID, 'gallery-button')
 
+    # locators for the case when other apps open camera app
+    _select_button_locator = (By.ID, 'select-button')
+    _camera_frame_locator = (By.CSS_SELECTOR, 'iframe[src*="camera"][src*="/index.html"]')
+
     def launch(self):
         Base.launch(self)
         self.wait_for_camera_ready()
@@ -42,6 +46,9 @@ class Camera(Base):
     def tap_capture(self):
         self.marionette.find_element(*self._capture_button_locator).tap()
 
+    def tap_select_button(self):
+        self.marionette.find_element(*self._select_button_locator).tap()
+
     def tap_switch_source(self):
         self.marionette.find_element(*self._switch_source_button_locator).tap()
         self.wait_for_capture_ready()
@@ -49,6 +56,9 @@ class Camera(Base):
     def tap_to_display_filmstrip(self):
         self.marionette.find_element(*self._body_locator).tap(x=1, y=1)
         self.wait_for_filmstrip_visible()
+
+    def wait_for_select_button_displayed(self):
+        self.wait_for_element_displayed(*self._select_button_locator)
 
     def wait_for_camera_ready(self):
         self.wait_for_element_present(*self._capture_button_enabled_locator)
@@ -68,6 +78,12 @@ class Camera(Base):
 
     def wait_for_video_timer_not_visible(self):
         self.wait_for_element_not_displayed(*self._video_timer_locator)
+
+    def switch_to_camera_frame(self):
+        self.marionette.switch_to_frame()
+        self.wait_for_element_present(*self._camera_frame_locator)
+        camera_frame = self.marionette.find_element(*self._camera_frame_locator)
+        self.marionette.switch_to_frame(camera_frame)
 
     @property
     def is_filmstrip_visible(self):

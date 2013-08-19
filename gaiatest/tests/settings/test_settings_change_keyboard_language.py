@@ -29,7 +29,7 @@ class TestChangeKeyboardLanguage(GaiaTestCase):
         contacts_app = Contacts(self.marionette)
         contacts_app.launch()
         new_contact_form = contacts_app.tap_new_contact()
-        new_contact_form.type_comment('')
+        new_contact_form.type_given_name('')
 
         # Switch to keyboard frame and switch language
         self.keyboard.switch_keyboard_language("es")

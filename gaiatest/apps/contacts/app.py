@@ -32,11 +32,6 @@ class Contacts(Base):
     def wait_for_contacts(self, number_to_wait_for=1):
         self.wait_for_condition(lambda m: len(m.find_elements(*self._contact_locator)) == number_to_wait_for)
 
-    @property
-    def new_contact(self):
-        from gaiatest.apps.contacts.regions.contact_form import NewContact
-        return NewContact(self.marionette)
-
     def contact(self, name):
         for contact in self.contacts:
             if contact.name == name:

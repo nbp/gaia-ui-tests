@@ -4,6 +4,7 @@
 
 import time
 
+from marionette.by import By
 from marionette.errors import NoSuchElementException
 from marionette.errors import ElementNotVisibleException
 from marionette.errors import TimeoutException
@@ -119,10 +120,10 @@ class Base(object):
         # have to go back to top level to get the B2G select box wrapper
         self.marionette.switch_to_frame()
 
-        self.wait_for_condition(lambda m: len(self.marionette.find_elements('css selector', '#value-selector-container li')) > 0)
+        self.wait_for_condition(lambda m: len(self.marionette.find_elements(By.CSS_SELECTOR, '#value-selector-container li')) > 0)
 
-        options = self.marionette.find_elements('css selector', '#value-selector-container li')
-        close_button = self.marionette.find_element('css selector', 'button.value-option-confirm')
+        options = self.marionette.find_elements(By.CSS_SELECTOR, '#value-selector-container li')
+        close_button = self.marionette.find_element(By.CSS_SELECTOR, 'button.value-option-confirm')
 
         # loop options until we find the match
         for li in options:
@@ -143,7 +144,7 @@ class Base(object):
         frame = self.frame or self.apps.displayed_app.frame
         self.marionette.switch_to_frame()
         self.marionette.execute_script('navigator.mozKeyboard.removeFocus();')
-        self.wait_for_condition(lambda m: m.find_element('css selector', '#keyboard-frame iframe').location['y'] == 480)
+        self.wait_for_condition(lambda m: m.find_element(By.CSS_SELECTOR, '#keyboard-frame iframe').location['y'] == 480)
         self.marionette.switch_to_frame(frame)
 
 

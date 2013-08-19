@@ -21,6 +21,7 @@ class TestImportContactsFromSIM(GaiaTestCase):
 
         # import contacts from SIM
         contacts_settings = contacts_app.tap_settings()
+        contacts_settings.tap_import_contacts()
         contacts_settings.tap_import_from_sim()
 
         # all the contacts in the SIM should be imported
