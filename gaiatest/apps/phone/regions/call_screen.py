@@ -10,10 +10,10 @@ from gaiatest.apps.phone.app import Phone
 class CallScreen(Phone):
 
     _call_screen_locator = (By.CSS_SELECTOR, "iframe[name='call_screen0']")
-
     _calling_contact_locator = (By.CSS_SELECTOR, 'div.number')
     _calling_contact_information_locator = (By.CSS_SELECTOR, 'div.additionalContactInfo')
-    _outgoing_call_locator = (By.CSS_SELECTOR, 'div.direction.outgoing')
+    # Quick fix locator until Bug 912490 is merged in.
+    _outgoing_call_locator = (By.XPATH, '//section[div/div[@class="direction outgoing"]]')
     _hangup_bar_locator = (By.ID, 'callbar-hang-up-action')
 
     def __init__(self, marionette):
@@ -28,16 +28,14 @@ class CallScreen(Phone):
 
     @property
     def outgoing_calling_contact(self):
-        self.wait_for_element_displayed(*self._calling_contact_locator)
-        return self.marionette.find_element(*self._calling_contact_locator).text
+        return self.marionette.find_element(*self._outgoing_call_locator).find_element(*self._calling_contact_locator).text
 
     @property
     def calling_contact_information(self):
-        return self.marionette.find_element(*self._calling_contact_information_locator).text
+        return self.marionette.find_element(*self._outgoing_call_locator).find_element(*self._calling_contact_information_locator).text
 
     def wait_for_outgoing_call(self):
         self.wait_for_element_displayed(*self._outgoing_call_locator)
-        self.wait_for_element_displayed(*self._calling_contact_locator)
 
     def tap_hang_up(self):
         hang_up = self.marionette.find_element(*self._hangup_bar_locator)

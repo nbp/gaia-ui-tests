@@ -2,7 +2,9 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+import re
 import time
+
 from gaiatest import GaiaTestCase
 from gaiatest.apps.camera.app import Camera
 
@@ -38,3 +40,20 @@ class TestCamera(GaiaTestCase):
 
         # Find the new film thumbnail in the film strip
         self.assertTrue(self.camera.is_filmstrip_visible)
+
+        # Check that video saved to sdcard
+        videos_after_test = self.get_video_files()
+        self.assertEqual(len(videos_after_test), 1)
+
+    def get_video_files(self):
+        # camera app doesn't have permissions to access
+        # all media files on device, so switch to system app
+        self.marionette.switch_to_frame()
+        videos = []
+        for f in self.data_layer.media_files:
+            try:
+                match = re.search('(.*[.]3gp)', f)
+                videos.append(match.group(1))
+            except AttributeError:
+                pass
+        return videos

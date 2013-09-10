@@ -29,4 +29,4 @@ class TestEverythingMeSearchPanel(GaiaTestCase):
         self.assertEqual(results[0].name, self.app_name)
         results[0].tap()
 
-        self.assertEqual(self.apps.displayed_app.name, self.app_name)
+        self.assertEqual(self.apps.displayed_app.name.lower(), self.app_name.lower())

@@ -2,32 +2,32 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-from gaiatest import GaiaTestCase
 import time
+
+from gaiatest import GaiaTestCase
 from gaiatest.apps.messages.app import Messages
-from gaiatest.apps.camera.app import Camera
 
 
 class TestSmsWithAttachments(GaiaTestCase):
 
-    def test_sms_send(self):
-        self.data_layer.connect_to_cell_data()
-        _text_message_content = "Automated Test %s" % str(time.time())
+    _text_message_content = 'Automated Test %s' % str(time.time())
 
+    def setUp(self):
+        GaiaTestCase.setUp(self)
+        self.data_layer.connect_to_cell_data()
+
+    def test_sms_send(self):
         # launch the app
-        self.messages = Messages(self.marionette)
-        self.messages.launch()
+        messages = Messages(self.marionette)
+        messages.launch()
 
         # click new message
-        new_message = self.messages.tap_create_new_message()
+        new_message = messages.tap_create_new_message()
         new_message.type_phone_number(self.testvars['carrier']['phone_number'])
 
-        new_message.type_message(_text_message_content)
-        select_attachment = new_message.tap_attachment()
-        camera = select_attachment.tap_camera()
-
-        # switch frame to camera iframe
-        camera.switch_to_camera_frame()
+        new_message.type_message(self._text_message_content)
+        actions_list = new_message.tap_attachment()
+        camera = actions_list.tap_camera()
 
         camera.wait_for_camera_ready()
         camera.tap_capture()
@@ -35,7 +35,7 @@ class TestSmsWithAttachments(GaiaTestCase):
         camera.tap_select_button()
 
         # switch back to messages app frame
-        self.messages.switch_to_messages_frame()
+        messages.switch_to_messages_frame()
 
         #click send
         self.message_thread = new_message.tap_send(timeout=300)
@@ -46,7 +46,7 @@ class TestSmsWithAttachments(GaiaTestCase):
         last_message = self.message_thread.all_messages[-1]
 
         # Check the most recent received message has the same text content
-        self.assertEqual(_text_message_content, last_received_message.text.strip('\n').strip())
+        self.assertEqual(self._text_message_content, last_received_message.text.strip('\n').strip())
 
         # Check that most recent message is also the most recent received message
         self.assertEqual(last_received_message.id, last_message.id)

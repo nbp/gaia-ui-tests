@@ -29,7 +29,6 @@ class TestBrowserBookmark(GaiaTestCase):
         browser.tap_bookmark_button()
         browser.tap_add_bookmark_to_home_screen_choice_button()
         browser.type_bookmark_title(self.bookmark_title)
-        browser.dismiss_keyboard()
         browser.tap_add_bookmark_to_home_screen_dialog_button()
 
         # Switch to Home Screen to look for bookmark

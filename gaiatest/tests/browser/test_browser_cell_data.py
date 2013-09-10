@@ -29,9 +29,3 @@ class TestBrowserCellData(GaiaTestCase):
         self.wait_for_element_present(*self._page_title_locator, timeout=120)
         heading = self.marionette.find_element(*self._page_title_locator)
         self.assertEqual(heading.text, 'We believe that the internet should be public, open and accessible.')
-
-    def tearDown(self):
-        GaiaTestCase.tearDown(self)
-
-    def is_throbber_visible(self):
-        return self.marionette.find_element(*self._throbber_locator).get_attribute('class') == 'loading'

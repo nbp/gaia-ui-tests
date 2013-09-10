@@ -126,7 +126,7 @@ class Marketplace(Base):
         feedback = self.marionette.find_element(*self._feedback_textarea_locator)
         feedback.clear()
         feedback.send_keys(feedback_text)
-        self.dismiss_keyboard()
+        self.keyboard.dismiss()
 
     def submit_feedback(self):
         self.wait_for_element_displayed(*self._feedback_submit_button_locator)

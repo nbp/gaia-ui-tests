@@ -22,6 +22,7 @@ class Contacts(Base):
     def launch(self):
         Base.launch(self)
         self.wait_for_element_not_displayed(*self._loading_overlay_locator)
+        self.wait_for_element_displayed(*self._settings_button_locator)
 
     @property
     def contacts(self):

@@ -126,5 +126,8 @@ class SearchPanel(Base):
             return self.root_element.get_attribute('data-name')
 
         def tap(self):
+            expected_name = self.name
             self.root_element.tap()
+            self.wait_for_condition(
+                lambda m: self.apps.displayed_app.name.lower() == expected_name.lower())
             self.marionette.switch_to_frame(self.apps.displayed_app.frame)

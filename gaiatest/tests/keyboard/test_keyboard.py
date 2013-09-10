@@ -23,16 +23,16 @@ class TestKeyboard(GaiaTestCase):
         new_contact_form.type_comment('')
 
         # initialize the keyboard app
-        kbapp = self.keyboard
+        keyboard = new_contact_form.keyboard
 
         # send first 15 characters, delete last character, send a space, and send all others
-        kbapp.send(self._string[:15])
-        kbapp.tap_backspace()
-        kbapp.tap_space()
-        kbapp.send(self._string[15:])
+        keyboard.send(self._string[:15])
+        keyboard.tap_backspace()
+        keyboard.tap_space()
+        keyboard.send(self._string[15:])
 
         # select special character using extended character selector
-        kbapp.choose_extended_character('A', 8)
+        keyboard.choose_extended_character('A', 8)
 
         # go back to app frame and finish this
         contacts_app.launch()

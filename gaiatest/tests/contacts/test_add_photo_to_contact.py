@@ -2,21 +2,12 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-from marionette.by import By
 from gaiatest import GaiaTestCase
 from gaiatest.mocks.mock_contact import MockContact
 from gaiatest.apps.contacts.app import Contacts
 
 
 class TestContacts(GaiaTestCase):
-
-    # Select from: dialog
-    _gallery_button_locator = (By.XPATH, "//a[text()='Gallery']")
-
-    # Gallery
-    _gallery_frame_locator = (By.CSS_SELECTOR, "iframe[src^='app://gallery'][src$='index.html#pick']")
-    _gallery_items_locator = (By.CSS_SELECTOR, 'li.thumbnail')
-    _gallery_crop_done_button_locator = (By.ID, 'crop-done-button')
 
     def setUp(self):
         GaiaTestCase.setUp(self)
@@ -48,26 +39,16 @@ class TestContacts(GaiaTestCase):
 
         saved_picture_style = edit_contact.picture_style
 
-        edit_contact.tap_picture()
-
-        # switch to the system app
-        self.marionette.switch_to_frame()
+        actions_list = edit_contact.tap_picture()
 
         # choose the source as gallery app
-        self.wait_for_element_displayed(*self._gallery_button_locator)
-        self.marionette.find_element(*self._gallery_button_locator).tap()
+        gallery = actions_list.tap_gallery()
 
-        # switch to the gallery app
-        self.wait_for_element_displayed(*self._gallery_frame_locator)
-        self.marionette.switch_to_frame(self.marionette.find_element(*self._gallery_frame_locator))
+        gallery.wait_for_thumbnails_to_load()
+        self.assertGreater(gallery.gallery_items_number, 0, 'No photos were found in the gallery.')
 
-        self.wait_for_element_displayed(*self._gallery_items_locator)
-        gallery_items = self.marionette.find_elements(*self._gallery_items_locator)
-        self.assertGreater(len(gallery_items), 0, 'No photos were found in the gallery.')
-        gallery_items[0].tap()
-
-        self.wait_for_element_displayed(*self._gallery_crop_done_button_locator)
-        self.marionette.find_element(*self._gallery_crop_done_button_locator).tap()
+        image = gallery.tap_first_gallery_item()
+        image.tap_crop_done()
 
         # switch back to the contacts app
         contacts_app.launch()

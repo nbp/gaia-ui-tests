@@ -11,7 +11,7 @@ from gaiatest.mocks.persona_test_user import PersonaTestUser
 
 class TestPersonaCookie(GaiaTestCase):
 
-    _logged_out_button_locator = (By.ID, 'loggedout')
+    _logged_out_button_locator = (By.CSS_SELECTOR, '#signinhere .btn-persona')
     _logged_in_button_locator = (By.ID, 'loggedin')
 
     def setUp(self):
@@ -35,6 +35,7 @@ class TestPersonaCookie(GaiaTestCase):
         browser.go_to_url('http://firefoxos.123done.org')
 
         browser.switch_to_content()
+
         self.wait_for_element_displayed(*self._logged_out_button_locator, timeout=120)
 
         login_button = self.marionette.find_element(*self._logged_out_button_locator)
@@ -45,7 +46,6 @@ class TestPersonaCookie(GaiaTestCase):
 
         browser.launch()
         browser.switch_to_content()
-
         self.wait_for_element_displayed(*self._logged_in_button_locator)
 
         browser.switch_to_chrome()

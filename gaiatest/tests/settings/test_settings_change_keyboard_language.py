@@ -11,8 +11,6 @@ from gaiatest.apps.contacts.app import Contacts
 
 class TestChangeKeyboardLanguage(GaiaTestCase):
 
-    # Test locators
-    _select_keyb_frame_locator = (By.CSS_SELECTOR, "#keyboard-frame iframe")
     _language_key_locator = (By.CSS_SELECTOR, ".keyboard-row button[data-keycode='-3']")
     _special_key_locator = (By.CSS_SELECTOR, ".keyboard-row button[data-keycode='209']")
     _expected_key = u'\xd1'
@@ -22,8 +20,14 @@ class TestChangeKeyboardLanguage(GaiaTestCase):
         settings.launch()
         keyboard_settings = settings.open_keyboard_settings()
 
+        # Tap on active keyboard link
+        select_keyboard = keyboard_settings.tap_active_keyboard()
+
+        # Tap 'add more keyboards' button
+        add_more_keyboards = select_keyboard.tap_add_more_keyboards()
+
         # Select keyboard language
-        keyboard_settings.select_language('spanish')
+        add_more_keyboards.select_language('Spanish')
 
         # launch the Contacts app to verify the keyboard layout
         contacts_app = Contacts(self.marionette)
@@ -32,9 +36,8 @@ class TestChangeKeyboardLanguage(GaiaTestCase):
         new_contact_form.type_given_name('')
 
         # Switch to keyboard frame and switch language
-        self.keyboard.switch_keyboard_language("es")
-        keybframe = self.marionette.find_element(*self._select_keyb_frame_locator)
-        self.marionette.switch_to_frame(keybframe, focus=False)
+        new_contact_form.keyboard.switch_to_keyboard()
+        new_contact_form.keyboard.tap_keyboard_language_key()
         self.wait_for_element_displayed(*self._special_key_locator)
         special_key = self.marionette.find_element(*self._special_key_locator).text
 

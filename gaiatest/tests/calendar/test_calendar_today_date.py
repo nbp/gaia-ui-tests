@@ -50,4 +50,4 @@ class TestCalendar(GaiaTestCase):
 
         # validate month title and current day aligns with today's date
         self.assertEquals(month_title.text, self.today.strftime('%B %Y'))
-        self.assertIn(self.today.strftime('%a %b %-d %Y'), current_date)
+        self.assertIn(self.today.strftime('%a %b %d %Y'), current_date)

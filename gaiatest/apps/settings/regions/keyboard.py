@@ -8,10 +8,46 @@ from gaiatest.apps.base import Base
 
 class Keyboard(Base):
 
+    _section_locator = (By.ID, 'keyboard')
+    _active_keyboard_link_locator = (By.CSS_SELECTOR, "a[data-l10n-id='activeKeyboard']")
+
+    def __init__(self, marionette):
+        Base.__init__(self, marionette)
+        section = self.marionette.find_element(*self._section_locator)
+        self.wait_for_condition(lambda m: section.location['x'] == 0)
+
+    def tap_active_keyboard(self):
+        self.marionette.find_element(*self._active_keyboard_link_locator).tap()
+        return KeyboardSelectKeyboard(self.marionette)
+
+
+class KeyboardSelectKeyboard(Base):
+
+    _section_locator = (By.ID, 'keyboard-selection')
+    _add_more_keyboards_button_locator = (By.CSS_SELECTOR, "button[data-l10n-id='addMoreKeyboards']")
+
+    def __init__(self, marionette):
+        Base.__init__(self, marionette)
+        section = self.marionette.find_element(*self._section_locator)
+        self.wait_for_condition(lambda m: section.location['x'] == 0)
+
+    def tap_add_more_keyboards(self):
+        self.marionette.find_element(*self._add_more_keyboards_button_locator).tap()
+        return KeyboardAddMoreKeyboards(self.marionette)
+
+
+class KeyboardAddMoreKeyboards(Base):
+
+    _section_locator =(By.ID, 'keyboard-selection-addMore')
     _select_language_locator = (
         By.XPATH,
-        "//section[@id='keyboard']//li/label[input[@name='keyboard.layouts.%s']]"
+        "//div[@id='keyboardAppContainer']//li[a[text()='%s']]"
     )
+
+    def __init__(self, marionette):
+        Base.__init__(self, marionette)
+        section = self.marionette.find_element(*self._section_locator)
+        self.wait_for_condition(lambda m: section.location['x'] == 0)
 
     def select_language(self, language):
         language_locator = (
@@ -21,5 +57,6 @@ class Keyboard(Base):
         self.wait_for_element_displayed(*language_locator)
         selected_language = self.marionette.find_element(*language_locator)
         # TODO bug 878017 - remove the explicit scroll once bug is fixed
+        # We still need this unfortunately
         self.marionette.execute_script("arguments[0].scrollIntoView(false);", [selected_language])
         selected_language.tap()

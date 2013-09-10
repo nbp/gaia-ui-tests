@@ -108,7 +108,6 @@ class Settings(Base):
     def _tap_menu_item(self, menu_item_locator):
         self.wait_for_element_displayed(*menu_item_locator)
         menu_item = self.marionette.find_element(*menu_item_locator)
-        # TODO bug 878017 - remove the explicit scroll once bug is fixed
-        self.marionette.execute_script("arguments[0].scrollIntoView(false);", [menu_item])
+        parent_section = menu_item.find_element(By.XPATH, 'ancestor::section')
         menu_item.tap()
-        self.wait_for_condition(lambda m: menu_item.location['x'] + menu_item.size['width'] == 0)
+        self.wait_for_condition(lambda m: parent_section.location['x'] + parent_section.size['width'] == 0)
