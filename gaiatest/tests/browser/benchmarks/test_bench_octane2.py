@@ -48,7 +48,7 @@ class TestBenchOctane(GaiaTestCase):
 
         # wait 5 minutes, to let the becnhmark complete.
         print "Start benchmarking ..."
-        time.sleep(7 * 60)
+        time.sleep(8 * 60)
         self.verify_finished()
 
         self.print_results()
