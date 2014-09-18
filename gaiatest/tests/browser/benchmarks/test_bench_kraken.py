@@ -5,7 +5,7 @@
 import json
 import time
 from gaiatest import GaiaTestCase
-from gaiatest.apps.browser.app import Browser
+from gaiatest.apps.search.app import Search
 
 
 class TestBenchKraken(GaiaTestCase):
@@ -17,15 +17,15 @@ class TestBenchKraken(GaiaTestCase):
 
     def setUp(self):
         GaiaTestCase.setUp(self)
+        self.apps.set_permission_by_url(Search.manifest_url, 'geolocation', 'deny')
         self.connect_to_local_area_network()
 
     def test_kraken(self):
-        # Bug 860516
-        browser = Browser(self.marionette)
-        browser.launch()
+        search = Search(self.marionette)
+        search.launch()
 
         print "Visit url %s" % self._start_page
-        browser.go_to_url(self._start_page)
+        browser = search.go_to_url(self._start_page)
         time.sleep(2)
 
         print "Switch to the content of the page."
