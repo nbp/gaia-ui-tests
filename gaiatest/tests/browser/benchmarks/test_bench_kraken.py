@@ -17,7 +17,8 @@ class TestBenchKraken(GaiaTestCase):
 
     def setUp(self):
         GaiaTestCase.setUp(self)
-        self.apps.set_permission_by_url(Search.manifest_url, 'geolocation', 'deny')
+        # Re-enable to bisect before Bug 1118891 (gaia).
+        # self.apps.set_permission_by_url(Search.manifest_url, 'geolocation', 'deny')
         self.connect_to_local_area_network()
 
     def test_kraken(self):
