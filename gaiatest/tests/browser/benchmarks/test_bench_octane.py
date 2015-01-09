@@ -19,6 +19,8 @@ class TestBenchOctane(GaiaTestCase):
         # Re-enable to bisect before Bug 1118891 (gaia).
         # self.apps.set_permission_by_url(Search.manifest_url, 'geolocation', 'deny')
         self.connect_to_local_area_network()
+        # Never turn off the screen
+        self.data_layer.set_setting('screen.timeout', 0)
         print ""
 
     def test_octane(self):
