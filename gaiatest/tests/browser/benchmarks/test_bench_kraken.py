@@ -4,6 +4,7 @@
 
 import json
 import time
+from marionette_driver import expected, By, Wait
 from gaiatest import GaiaTestCase
 from gaiatest.apps.search.app import Search
 
@@ -11,9 +12,9 @@ from gaiatest.apps.search.app import Search
 class TestBenchKraken(GaiaTestCase):
 
     _start_page = 'http://people.mozilla.com/~npierron/kraken/hosted/index.html'
-    _run_locator = ('css selector', '#results > p > a')
+    _run_locator = (By.CSS_SELECTOR, '#results > p > a')
 
-    _console_locator = ('id', 'console')
+    _console_locator = (By.ID, 'console')
 
     def setUp(self):
         GaiaTestCase.setUp(self)
@@ -60,14 +61,18 @@ class TestBenchKraken(GaiaTestCase):
         self.print_results()
 
     def verify_home_page(self):
-        self.wait_for_element_present(*self._run_locator)
-        link = self.marionette.find_element(*self._run_locator)
+        link = Wait(self.marionette).until(
+            expected.element_present(*self._run_locator))
+        Wait(self.marionette).until(
+            expected.element_displayed(link))
         self.assertTrue(link.text == 'Begin',
                         'The kraken start page is not loaded.')
 
     def verify_finished(self):
-        self.wait_for_element_present(*self._run_locator)
-        link = self.marionette.find_element(*self._run_locator)
+        link = Wait(self.marionette).until(
+            expected.element_present(*self._run_locator))
+        Wait(self.marionette).until(
+            expected.element_displayed(link))
         self.assertTrue(link.text == 'Run Again',
                         'The kraken final page is not loaded.')
 

@@ -3,8 +3,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 import time
-from marionette.marionette import Actions
-from marionette.errors import ElementNotVisibleException
+from marionette_driver import expected, By, Wait
 from gaiatest import GaiaTestCase
 from gaiatest.apps.search.app import Search
 
@@ -12,9 +11,9 @@ from gaiatest.apps.search.app import Search
 class TestBenchSunspider(GaiaTestCase):
 
     _start_page = 'http://people.mozilla.com/~npierron/sunspider/hosted/'
-    _start_now_locator = ('css selector', 'body > p > a')
+    _start_now_locator = (By.CSS_SELECTOR, 'body > p > a')
 
-    _console_locator = ('id', 'console')
+    _console_locator = (By.ID, 'console')
 
     def setUp(self):
         GaiaTestCase.setUp(self)
@@ -67,13 +66,17 @@ class TestBenchSunspider(GaiaTestCase):
         self.print_results()
 
     def verify_home_page(self):
-        self.wait_for_element_present(*self._start_now_locator)
-        link = self.marionette.find_element(*self._start_now_locator)
+        link = Wait(self.marionette).until(
+            expected.element_present(*self._start_now_locator))
+        Wait(self.marionette).until(
+            expected.element_displayed(link))
         self.assertTrue(link.text == 'Start Now!',
                         'The sunspider page is not rendered.')
 
     def verify_finished(self):
-        self.wait_for_element_displayed(*self._console_locator)
+        Wait(self.marionette).until(expected.element_displayed(
+            Wait(self.marionette).until(expected.element_present(
+                *self._console_locator))))
 
     def print_results(self):
         # Return a list of lines, as the full string is too large for

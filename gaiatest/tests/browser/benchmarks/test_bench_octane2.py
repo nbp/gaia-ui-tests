@@ -3,6 +3,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 import time
+from marionette_driver import expected, By, Wait
 from gaiatest import GaiaTestCase
 from gaiatest.apps.search.app import Search
 
@@ -10,9 +11,9 @@ from gaiatest.apps.search.app import Search
 class TestBenchOctane(GaiaTestCase):
 
     _start_page = 'http://people.mozilla.com/~npierron/octane-2.0/index.html'
-    _run_octane_locator = ('id', 'run-octane')
-    _last_benchmark_locator = ('css selector', '#Box-Typescript .p-result')
-    _total_score_locator = ('id', 'main-banner')
+    _run_octane_locator = (By.ID, 'run-octane')
+    _last_benchmark_locator = (By.CSS_SELECTOR, '#Box-Typescript .p-result')
+    _total_score_locator = (By.ID, 'main-banner')
 
     def setUp(self):
         GaiaTestCase.setUp(self)
@@ -39,7 +40,8 @@ class TestBenchOctane(GaiaTestCase):
         self.verify_home_page()
 
         print "Get octane button."
-        run_button = self.marionette.find_element(*self._run_octane_locator)
+        run_button = Wait(self.marionette).until(
+            expected.element_present(*self._run_octane_locator))
 
         # wait 30s, to let the system settle.
         print "wait 30 seconds."
@@ -60,7 +62,9 @@ class TestBenchOctane(GaiaTestCase):
         tested = 0
         while True:
             try:
-                self.wait_for_element_displayed(*self._run_octane_locator, timeout=180)
+                Wait(self.marionette).until(expected.element_displayed(
+                    Wait(self.marionette).until(expected.element_present(
+                        *self._run_octane_locator))))
                 break
             except:
                 tested += 1
@@ -68,8 +72,10 @@ class TestBenchOctane(GaiaTestCase):
                     raise
 
     def verify_finished(self):
-        self.wait_for_element_displayed(*self._last_benchmark_locator)
-        result = self.marionette.find_element(*self._last_benchmark_locator)
+        result = Wait(self.marionette).until(
+            expected.element_present(*self._last_benchmark_locator))
+        Wait(self.marionette).until(
+            expected.element_displayed(result))
         self.assertTrue(result.text.isdigit(), 'Benchmark is still running?')
 
     def print_results(self):
