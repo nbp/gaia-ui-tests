@@ -22,6 +22,8 @@ class TestBenchOctane(GaiaTestCase):
         self.connect_to_local_area_network()
         # Never turn off the screen
         self.data_layer.set_setting('screen.timeout', 0)
+        # Prevent tracking protection message from holding inputs for the browser.
+        self.data_layer.set_bool_pref('privacy.trackingprotection.enabled', False)
         print ""
 
     def test_octane(self):
