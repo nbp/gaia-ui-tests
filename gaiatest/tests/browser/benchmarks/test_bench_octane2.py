@@ -24,7 +24,7 @@ class TestBenchOctane(GaiaTestCase):
         self.data_layer.set_setting('screen.timeout', 0)
         # Prevent tracking protection message from holding inputs for the browser.
         self.data_layer.set_bool_pref('privacy.trackingprotection.enabled', False)
-        self.data_layer.set_bool_pref('privacy.trackingprotection.shown', False)
+        self.data_layer.set_bool_pref('privacy.trackingprotection.shown', True)
         print ""
 
     def test_octane(self):
