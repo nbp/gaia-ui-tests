@@ -5,7 +5,7 @@
 import time
 from marionette_driver import expected, By, Wait
 from gaiatest import GaiaTestCase
-from gaiatest.apps.search.app import Search
+from gaiatest.apps.system.app import System
 
 
 class TestBenchOctane(GaiaTestCase):
