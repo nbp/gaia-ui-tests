@@ -29,8 +29,7 @@ class TestBenchKraken(GaiaTestCase):
         print ""
 
     def test_kraken(self):
-        search = Search(self.marionette)
-        search.launch()
+        search = System(self.marionette).tap_search_bar()
 
         print "Visit url %s" % self._start_page
         browser = search.go_to_url(self._start_page)
